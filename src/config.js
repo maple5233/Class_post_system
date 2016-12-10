@@ -1,11 +1,8 @@
-var mysql=require('mysql');
-
-
-var client = mysql.createConnection({
-    host:'localhost',
-    user:'root',
-    password:'',
-    database:'class_post_system'
-})
-
-module.exports = client;
+module.exports = {
+	mysql: {
+		host: '127.0.0.1', 
+		user: 'root',
+		password: '',
+		database:'class_post_system'
+	}
+};

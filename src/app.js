@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 require("babel-core/register");
 const config = require('./config');
 const app = express();
-let meeting = require('./routes/Meeting');
+// let meeting = require('./routes/Meeting');
+let teacher = require('./routes/teacher');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -15,11 +16,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/client')));
 
-console.dir(meeting)
-//  Model路由
-[ meeting ].forEach (item => {
+//  restful路由
+[teacher].forEach (item => {
     item.$routers.forEach (router => {
-        app[ router.method ] ('api' + router.path, router.router)
+        app[ router.method ] ('/api' + router.path, router.router);
     })
 });
 
