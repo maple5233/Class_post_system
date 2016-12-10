@@ -7,15 +7,21 @@ const bodyParser = require('body-parser');
 require("babel-core/register");
 const config = require('./config');
 const app = express();
+let meeting = require('./routes/Meeting');
 
-
-// uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/client')));
 
+console.dir(meeting)
+//  Model路由
+[ meeting ].forEach (item => {
+    item.$routers.forEach (router => {
+        app[ router.method ] ('api' + router.path, router.router)
+    })
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,7 +49,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.json({status:0,message:err.message});
 });
-
-
 
 module.exports = app;
