@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>教师客户端</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,height=device-height,
+    user-scalable=no,maximum-scale=1.0,minimum-scale=1.0">
+    <meta name="keywords" content="管理系统"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+    <link rel="stylesheet" href="../stylesheets/teacher.css">
+    <link rel="stylesheet" href="../stylesheets/libs/normalize.css">
+</head>
+<body>
+    <div id="whole">
+        <header>
+            <el-row>
+                <el-col :span="18">
+                    <div class="grid-content bg-purple-dark title"><i class="el-icon-edit"></i>管理学生的权限</div>
+                </el-col>
+                <el-col :span="6">
+                    <div class="grid-content bg-purple-dark">
+                        <el-radio-group v-model="modelSelected">
+                            <el-radio-button label="授予学生职位"></el-radio-button>
+                            <el-radio-button label="个人权限编辑"></el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </el-col>
+            </el-row>
+        </header>
+        <div class="login">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span style="line-height: 36px;">老师您好，请先登录</span>
+                </div>
+                <el-form :rules="rules" ref="teacher" :model="teacher" label-width="80px">
+                    <el-form-item label="工号"  prop="teacherId">
+                        <el-input v-model="teacher.teacherId"></el-input>
+                    </el-form-item>
+                    <el-form-item  label="密码" prop="teacherPass">
+                        <el-input type="password" v-model="teacher.teacherPass" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">登录</el-button>
+                        <el-button @click="reset">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
+    </div>
+    <script src="http://cdn.bootcss.com/vue/2.0.3/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../javascripts/teacher.js"></script>
+</body>
+</html>
