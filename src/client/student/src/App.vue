@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <PageHeader/>
+    <!-- <PageHeader/> -->
     <router-view></router-view>
-    <PageFooter/>
+    <!-- <PageFooter/> -->
   </div>
 </template>
 

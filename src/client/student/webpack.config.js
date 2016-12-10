@@ -28,10 +28,10 @@ module.exports = {
           presets: ['es2015']
         }
       },
-      {
-        test: /\.css$/,
-        loader: 'style!css'
-      },
+      // {
+      //   test: /\.css$/,
+      //   loader: 'style!css'
+      // },
       {
         test: /\.less$/,
         loader: 'style!css!less'
