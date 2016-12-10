@@ -33,6 +33,10 @@ module.exports = {
         loader: 'style!css'
       },
       {
+        test: /\.less$/,
+        loader: 'style!css!less'
+      },
+      {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
         loader: 'file'
       },
