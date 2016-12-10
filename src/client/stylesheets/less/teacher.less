@@ -13,6 +13,7 @@
 @main-padding: 15px;
 @main-margin:15px;
 @big-font: 36px;
+@small-font: 18px;
 
 
 * {
@@ -32,7 +33,43 @@ header {
     }
 }
 
+.big-font {
+    font-size: @big-font;
+}
+
+.small-font {
+    font-size: @small-font;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.login , .edit-box {
+    margin: @main-margin auto;
+}
+
 .login {
     width: 40%;
-    margin: @main-margin auto;
+}
+
+.edit-box {
+    width: 60%;
+}
+
+.role {
+    background-color: @ele-blue;
+    color: #fff;
+}
+
+table {
+    margin-top: @small-font;
+
+    th,td {
+        text-align: center;
+    }
+
+    .student-head {
+        font-size: @small-font;
+    }
 }

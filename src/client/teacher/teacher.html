@@ -10,7 +10,7 @@
     <meta name="keywords" content="管理系统"/>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
     <link rel="stylesheet" href="../stylesheets/teacher.css">
-    <link rel="stylesheet" href="../stylesheets/libs/normalize.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
     <div id="whole">
@@ -19,7 +19,7 @@
                 <el-col :span="18">
                     <div class="grid-content bg-purple-dark title"><i class="el-icon-edit"></i>管理学生的权限</div>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="6" v-if="logined">
                     <div class="grid-content bg-purple-dark">
                         <el-radio-group v-model="modelSelected">
                             <el-radio-button label="授予学生职位"></el-radio-button>
@@ -29,10 +29,10 @@
                 </el-col>
             </el-row>
         </header>
-        <div class="login">
+        <div class="login" v-if="!logined">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                    <span style="line-height: 36px;">老师您好，请先登录</span>
+                    <span class="small-font">老师您好，请先登录</span>
                 </div>
                 <el-form :rules="rules" ref="teacher" :model="teacher" label-width="80px">
                     <el-form-item label="工号"  prop="teacherId">
@@ -42,10 +42,37 @@
                         <el-input type="password" v-model="teacher.teacherPass" auto-complete="off" ></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">登录</el-button>
+                        <el-button type="primary" @click="tryLogin">登录</el-button>
                         <el-button @click="reset">重置</el-button>
                     </el-form-item>
                 </el-form>
+            </el-card>
+        </div>
+        <div class="edit-box">
+            <el-card class="box-card">
+                <div class="role-box" v-if="roleMod">
+                    <div slot="header" class="clearfix">
+                        <span class="small-font">学生角色列表</span>
+                    </div>
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead class="student-head">
+                            <tr>
+                                <th class="student-num-head">姓名</th>
+                                <th class="student-role-head" colspan="5">身份</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="student-row" v-bind:key="student.studentId" v-for="(student , index) in students">
+                                <td>{{ student.studentName }}</td>
+                                <td :class="{ role: student.role === 4 }" @click="changeStudentRole(index,4)">班长</td>
+                                <td :class="{ role: student.role === 3 }" @click="changeStudentRole(index,3)">团支书</td>
+                                <td :class="{ role: student.role === 2 }" @click="changeStudentRole(index,2)">学习委员</td>
+                                <td :class="{ role: student.role === 1 }" @click="changeStudentRole(index,1)">课代表</td>
+                                <td :class="{ role: student.role === 0 }" @click="changeStudentRole(index,0)">普通学生</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </el-card>
         </div>
     </div>
