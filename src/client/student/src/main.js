@@ -8,6 +8,5 @@ Vue.use(ElementUI)
 
 new Vue({
   el: '#app',
-  router,
   render: h => h(App)
 })
