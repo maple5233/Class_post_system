@@ -16,6 +16,31 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/client')));
 
+// 引入jwt模块
+let jwt = require('jwt-simple');
+// 设置密钥
+app.set('jwtTokenSecret', 'maple5233');
+
+// 用户登录后根据id生成token
+// let expires = moment().add('days', 7).valueOf();
+// let token = jwt.encode({
+//   iss: user.id,
+//   exp: expires
+// }, app.get('jwtTokenSecret'));
+// 发回客户端
+// res.json({
+//   token : token,
+//   user: user.toJSON()
+// });
+// 
+
+// jwt验证路由
+// var jwtAuth = require('./routes/jwtAuth');
+
+// 拦截restful请求
+// app.all('/api/*', [express.bodyParser(), jwtAuth]);
+
+
 //  restful路由
 [teacher].forEach (item => {
     item.$routers.forEach (router => {
