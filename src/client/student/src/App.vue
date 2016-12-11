@@ -3,12 +3,14 @@
     <header-menu ></header-menu>
     <div class="container">
         <router-view></router-view>
+        <float-button></float-button>
     </div>
   </div>
 </template>
 
 <script>
   import headerMenu from './components/headerMenu.vue'
+  import floatButton from './components/floatButton.vue'
 
   export default {
     data () {
@@ -17,7 +19,7 @@
       }
     },
     components: {
-      headerMenu
+      headerMenu,floatButton
     },
     methods: {
       
