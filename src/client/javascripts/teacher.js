@@ -95,14 +95,14 @@ let vm = new Vue ({
             studentRank: 31,        // 权限等级
             role: 4,                 // 角色等级(通过studentRank计算得到)
             powers: ['1', '1', '1', '1', '1'], // 实际权限数组（计算得到）
-            _powers: ['1','1','1','1','1']    // 职位权限数组（计算得到）
+            rolePowers: ['1','1','1','1','1']    // 职位权限数组（计算得到）
         },{
             studentId: 1,           // 学号
             studentName: '徐胜倩',  // 姓名
             studentRank: 14,        // 权限等级
             role: 3,                 // 角色等级(通过studentRank计算得到)
             powers: ['0', '1', '1', '1', '0'], // 实际权限数组（计算得到）
-            _powers: ['0','1','1','1','0']    // 职位权限数组（计算得到）
+            rolePowers: ['0','1','1','1','0']    // 职位权限数组（计算得到）
         }]
     },
     methods: {
@@ -138,24 +138,25 @@ let vm = new Vue ({
           student.role = role;
           student.studentRank = roleToRank(role);
           student.powers = rankToPower(student.studentRank);
-          student._powers = student.powers
+          student.rolePowers = student.powers
             /**
              * 根据学生id更新后台数据
              */
         },
         changePower: function (index,power) {
+
           let student = this.students[index];
-          console.log(student._powers[index])
+
           let hasAuthor = (student.powers[power] == 1); // 原本有没有这个权限
           student.powers[power] = hasAuthor ? '0':'1';
+
           if(!hasAuthor) { // 增加权限
             student.studentRank += getPowerTwo(power);
           } else {                      // 权限缩水
             student.studentRank -= getPowerTwo(power);
           }
-          this.changeMod()
-          console.log(student._powers[index])
-          this.changeMod()
+          
+          student.rolePowers = roleToPower(student.role)
            /**
              * 根据学生id更新后台数据
              */
@@ -164,7 +165,6 @@ let vm = new Vue ({
          * 切换编辑模式
          */
         changeMod: function () {
-          console.log()
           this.roleMod = event.target._value === '授予学生职位'
         }
     }

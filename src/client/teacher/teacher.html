@@ -87,11 +87,11 @@
                         <tbody>
                             <tr class="student-row" v-bind:key="student.studentId" v-for="(student , index) in students">
                                 <td>{{ student.studentName }}</td>
-                                <td :class="{ choosed: student.powers[0] != 0 }" v-show="student._powers[0] == 0" @click="changePower(index,0)">开班会</td>
-                                <td :class="{ choosed: student.powers[1] != 0 }" v-show="student._powers[1] == 0" @click="changePower(index,1)">收党费</td>
-                                <td :class="{ choosed: student.powers[2] != 0 }" v-show="student._powers[2] == 0" @click="changePower(index,2)">评优生</td>
-                                <td :class="{ choosed: student.powers[3] != 0 }" v-show="student._powers[3] == 0" @click="changePower(index,3)">考  勤</td>
-                                <td :class="{ choosed: student.powers[4] != 0 }" v-show="student._powers[4] == 0" @click="changePower(index,4)">管回复</td>
+                                <td :class="{ choosed: student.powers[0] != 0 }" v-if="student.rolePowers[0] == 0" @click="changePower(index,0)">开班会</td>
+                                <td :class="{ choosed: student.powers[1] != 0 }" v-if="student.rolePowers[1] == 0" @click="changePower(index,1)">收党费</td>
+                                <td :class="{ choosed: student.powers[2] != 0 }" v-if="student.rolePowers[2] == 0" @click="changePower(index,2)">评优生</td>
+                                <td :class="{ choosed: student.powers[3] != 0 }" v-if="student.rolePowers[3] == 0" @click="changePower(index,3)">考  勤</td>
+                                <td :class="{ choosed: student.powers[4] != 0 }" v-if="student.rolePowers[4] == 0" @click="changePower(index,4)">管回复</td>
                             </tr>
                         </tbody>
                     </table>
