@@ -10,10 +10,20 @@ let vm = new Vue ({
         },
         modelSelected: '',
         rules: {
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
-          ]
+            password: [
+                { required: true, message: '请输入密码', trigger: 'blur' },
+                { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+            ]
+        },
+        rules2: {
+            password: [
+                { required: true, message: '请输入密码', trigger: 'blur' },
+                { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+            ],
+            name: [
+                { required: true, message: '请输入姓名', trigger: 'blur' },
+                { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+            ]
         },
         teachers: [{
             teacherName: '尹剑飞',
@@ -45,7 +55,8 @@ let vm = new Vue ({
         index: 0,
         row: null,
         formLabelWidth:'120px',
-        editing: false
+        editing: false,
+        adding: false
     },
     methods: {
         /**
@@ -84,7 +95,9 @@ let vm = new Vue ({
         handleEdit: function (index, row) {
             this.index = index;
             this.row = row;
-            this.editing = true
+            this.editing = true;
+            this.adding = false;
+            this.resetForm();
         },
         /**
          * 删除某个老师或者学生
@@ -113,24 +126,73 @@ let vm = new Vue ({
             });
         },
         /**
-         * 编辑某个老师或者学生
+         * 
          */
-        editSomeone: function(){
-            if (this.teacherMod) {
-                this.teachers[this.index].teacherName = this.form.name
-                this.teachers[this.index].teacherPass = this.form.pass
-                this.editing = false
-            } else {
-                this.students[this.index].studentName = this.form.name
-                this.students[this.index].studentPass = this.form.pass
-                this.editing = false
+        submitForm: function(){
+            /**
+             * 因为这个表单是动态渲染的所以无法适配rules
+             * 自己做验证
+             */
+            let name = this.form.name;
+            let pass = this.form.pass;
+            if (name == null || pass == null) {
+                this.$message.error('输入有误!');
+                return;
             }
+            let goodName = 0<name.length && name.length<12;
+            let goodPass = 6<pass.length && pass.length<12;
+            if (!goodName || !goodPass) {
+                this.$message.error('输入有误!');
+                return;
+            }
+            if (!this.adding) {
+                // 编辑某个老师或者学生
+                if (this.teacherMod) {
+                    this.teachers[this.index].teacherName = this.form.name
+                    this.teachers[this.index].teacherPass = this.form.pass
+                } else {
+                    this.students[this.index].studentName = this.form.name
+                    this.students[this.index].studentPass = this.form.pass
+                }
+            } else {
+                if (this.teacherMod) {
+                    this.teachers.push({
+                        teacherId: Math.floor(Math.random()*100),
+                        teacherName: this.form.name,
+                        teacherPass: this.form.pass
+                    });
+                } else {
+                    this.students.push({
+                        studentId: Math.floor(Math.random()*100),
+                        studentName: this.form.name,
+                        studentPass: this.form.pass
+                    });
+                }
+            }
+            this.editing = false
+            this.adding = false
         },
         /**
          * 关闭编辑框
          */
         closeFromBox: function () {
-            this.editing = false
+            this.editing = false;
+        },
+        /**
+         * 打开弹出框并设置增加标志
+         */
+        handleAdd: function () {
+            this.editing = true;
+            this.adding = true;
+            this.resetForm();
+        },
+        resetForm: function () {
+            /* 由于form只在弹出框渲染
+            this.$refs.form.resetFields() 无法访问到form */
+            this.form = {
+                name: null,
+                pass: null
+            }
         }
     }
 })

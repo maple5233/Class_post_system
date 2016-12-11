@@ -16,7 +16,7 @@
     <div id="whole">
         <header>
             <el-row>
-                <el-col :span="18">
+                <el-col :span="14">
                     <div class="grid-content title"><i class="el-icon-edit"></i>管理账号</div>
                 </el-col>
                 <el-col :span="6" v-show="logined">
@@ -26,6 +26,9 @@
                             <el-radio-button label="管理老师账号"></el-radio-button>
                         </el-radio-group>
                     </div>
+                </el-col>
+                <el-col :span="4" v-show="logined">
+                    <el-button icon="plus" @click="handleAdd">增加账号</el-button>
                 </el-col>
             </el-row>
         </header>
@@ -106,17 +109,17 @@
         </div>
         <!-- 编辑框 -->
         <el-dialog title="信息编辑" v-model="editing">
-            <el-form :model="form">
+            <el-form :model="form" ref="form" :rules="rules2">
                 <el-form-item label="姓名" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" auto-complete="off"></el-input>
+                    <el-input v-model="form.name" prop="name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" :label-width="formLabelWidth">
-                    <el-input v-model="form.pass" auto-complete="off"></el-input>
+                    <el-input v-model="form.pass" prop="password" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="closeFromBox">取 消</el-button>
-                <el-button type="primary" @click="editSomeone">确 定</el-button>
+                <el-button type="primary" @click="submitForm">确 定</el-button>
             </div>
         </el-dialog>
     </div>
