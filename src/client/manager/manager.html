@@ -14,6 +14,75 @@
 </head>
 <body>
     <div id="whole">
+        <header>
+            <el-row>
+                <el-col :span="18">
+                    <div class="grid-content title"><i class="el-icon-edit"></i>管理账号</div>
+                </el-col>
+                <el-col :span="6" v-show="logined">
+                    <div class="grid-content">
+                        <el-radio-group v-model="modelSelected" @change="changeMod()">
+                            <el-radio-button label="管理学生账号"></el-radio-button>
+                            <el-radio-button label="管理老师账号"></el-radio-button>
+                        </el-radio-group>
+                    </div>
+                </el-col>
+            </el-row>
+        </header>
+        <div class="login" v-show="!logined">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span class="small-font">管理员您好，请先登录</span>
+                </div>
+                <el-form :rules="rules" ref="manager" :model="manager" label-width="80px">
+                    <el-form-item  label="密码" prop="password">
+                        <el-input type="password" v-model="manager.password" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="tryLogin">登录</el-button>
+                        <el-button @click="reset">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
+
+        <div class="edit-box">
+            <el-card class="box-card">
+                <!-- 老师账号列表 -->
+                <div class="role-box" v-if="roleMod">
+                    <!-- 卡片首部 -->
+                    <div slot="header" class="clearfix">
+                        <span class="small-font">老师账号列表</span>
+                    </div>
+
+                </div>
+            </el-card>
+        </div>
+
+
+        <el-table :data="tableData" border style="width: 100%">
+            <el-table-column inline-template label="日期" width="180">
+                <div>
+                    <el-icon name="time"></el-icon>
+                    <span style="margin-left: 10px">{{ row.date }}</span>
+                </div>
+            </el-table-column>
+            <el-table-column inline-template label="姓名" width="180">
+                <el-popover trigger="hover" placement="top">
+                    <p>姓名: {{ row.name }}</p>
+                    <p>住址: {{ row.address }}</p>
+                    <div slot="reference" class="name-wrapper">
+                        <el-tag>{{ row.name }}</el-tag>
+                    </div>
+                </el-popover>
+            </el-table-column>
+            <el-table-column :context="_self" inline-template label="操作">
+                <div>
+                    <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
+                    <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button>
+                </div>
+            </el-table-column>
+        </el-table>
     </div>
     <script src="http://cdn.bootcss.com/vue/2.0.3/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
