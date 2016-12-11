@@ -42,7 +42,7 @@ module.exports = {
 	},
     find: function(req, res, next){
     	pool.getConnection(function(err, connection){
-    		let param = req.query || req.params || req.body;
+    		let param = req.body || req.query || req.params;
     		let startPage = param.page*20;
     		let endPage = (param.page + 1)*20;
             connection.query($sql.findAll, [param.classId, param.type, startPage, endPage], function(err, result){
@@ -70,7 +70,7 @@ module.exports = {
     },
     delete: function(req, res, next){
     	pool.getConnection(function(err, connection){
-    		let param = req.query || req.params || req.body;
+    		let param = req.body || req.query || req.params;
             connection.query($sql.delete, [param.postId], function(err, result){
             	if(result.affectedRows) {
             		console.log("deletePost:"+result.affectedRows);
