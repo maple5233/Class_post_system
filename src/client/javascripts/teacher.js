@@ -47,6 +47,27 @@ let rankToRole = (rank) => {
         }
     }
 }
+/**
+ * 权限等级转权限数组
+ * @param  {Number} rank 权限等级
+ * @return {[String]}    权限数组
+ */
+let rankToPower = (rank) => {
+  let powers = rank.toString(2).split('');
+  while (powers.length<5) {
+    powers.unshift('0');
+  }
+  return powers;
+}
+
+/**
+ * 职位等级转权限数组
+ * @param  {Number} rank 角色职位等级
+ * @return {[String]}    权限数组
+ */
+let roleToPower  = (role) => {
+  return rankToPower(roleToRank(role));
+}
 
 let vm = new Vue ({
     el: '#whole',
@@ -72,7 +93,16 @@ let vm = new Vue ({
             studentId: 0,           // 学号
             studentName: '洪继耀',  // 姓名
             studentRank: 31,        // 权限等级
-            role: 4                 // 角色等级(通过studentRank计算得到)
+            role: 4,                 // 角色等级(通过studentRank计算得到)
+            powers: ['1', '1', '1', '1', '1'], // 实际权限数组（计算得到）
+            _powers: ['1','1','1','1','1']    // 职位权限数组（计算得到）
+        },{
+            studentId: 1,           // 学号
+            studentName: '徐胜倩',  // 姓名
+            studentRank: 14,        // 权限等级
+            role: 3,                 // 角色等级(通过studentRank计算得到)
+            powers: ['0', '1', '1', '1', '0'], // 实际权限数组（计算得到）
+            _powers: ['0','1','1','1','0']    // 职位权限数组（计算得到）
         }]
     },
     methods: {
@@ -103,14 +133,36 @@ let vm = new Vue ({
          * @param  {Number} role      角色等级
          * @param  {Number} studentId 学号
          */
-        changeStudentRole : function (index,role) {
-            let student = this.students[index]
-            student.role = role;
-            student.studentRank = roleToRank(role);
-            console.log(student.studentRank);
+        changeStudentRole: function (index,role) {
+          let student = this.students[index];
+          student.role = role;
+          student.studentRank = roleToRank(role);
+          student.powers = rankToPower(student.studentRank);
+          student._powers = student.powers
             /**
              * 根据学生id更新后台数据
              */
+        },
+        changePower: function (index,power) {
+          let student = this.students[index];
+          let hasAuthor = (student.powers[power] == 1); // 原本有没有这个权限
+          student.powers[power] = hasAuthor ? '0':'1';
+          if(!hasAuthor) { // 增加权限
+            student.studentRank += getPowerTwo(power);
+          } else {                      // 权限缩水
+            student.studentRank -= getPowerTwo(power);
+          }
+          this.changeMod();
+          this.changeMod();
+           /**
+             * 根据学生id更新后台数据
+             */
+        },
+        /**
+         * 切换编辑模式
+         */
+        changeMod: function () {
+          this.roleMod = !this.roleMod
         }
     }
 })

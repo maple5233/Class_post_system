@@ -19,9 +19,9 @@
                 <el-col :span="18">
                     <div class="grid-content bg-purple-dark title"><i class="el-icon-edit"></i>管理学生的权限</div>
                 </el-col>
-                <el-col :span="6" v-if="logined">
+                <el-col :span="6" v-show="logined">
                     <div class="grid-content bg-purple-dark">
-                        <el-radio-group v-model="modelSelected">
+                        <el-radio-group v-model="modelSelected" @change="changeMod">
                             <el-radio-button label="授予学生职位"></el-radio-button>
                             <el-radio-button label="个人权限编辑"></el-radio-button>
                         </el-radio-group>
@@ -29,7 +29,7 @@
                 </el-col>
             </el-row>
         </header>
-        <div class="login" v-if="!logined">
+        <div class="login" v-show="!logined">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span class="small-font">老师您好，请先登录</span>
@@ -64,11 +64,34 @@
                         <tbody>
                             <tr class="student-row" v-bind:key="student.studentId" v-for="(student , index) in students">
                                 <td>{{ student.studentName }}</td>
-                                <td :class="{ role: student.role === 4 }" @click="changeStudentRole(index,4)">班长</td>
-                                <td :class="{ role: student.role === 3 }" @click="changeStudentRole(index,3)">团支书</td>
-                                <td :class="{ role: student.role === 2 }" @click="changeStudentRole(index,2)">学习委员</td>
-                                <td :class="{ role: student.role === 1 }" @click="changeStudentRole(index,1)">课代表</td>
-                                <td :class="{ role: student.role === 0 }" @click="changeStudentRole(index,0)">普通学生</td>
+                                <td :class="{ choosed: student.role === 4 }" @click="changeStudentRole(index,4)">班长</td>
+                                <td :class="{ choosed: student.role === 3 }" @click="changeStudentRole(index,3)">团支书</td>
+                                <td :class="{ choosed: student.role === 2 }" @click="changeStudentRole(index,2)">学习委员</td>
+                                <td :class="{ choosed: student.role === 1 }" @click="changeStudentRole(index,1)">课代表</td>
+                                <td :class="{ choosed: student.role === 0 }" @click="changeStudentRole(index,0)">普通学生</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="rank-box" v-if="!roleMod">
+                    <div slot="header" class="clearfix">
+                        <span class="small-font">学生可增减权限列表</span>
+                    </div>
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead class="student-head">
+                            <tr>
+                                <th class="student-num-head">姓名</th>
+                                <th class="student-role-head" colspan="5">可增减权限</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="student-row" v-bind:key="student.studentId" v-for="(student , index) in students">
+                                <td>{{ student.studentName }}</td>
+                                <td :class="{ choosed: student.powers[0] != 0 }" v-show="student._powers[0] == 0" @click="changePower(index,0)">开班会</td>
+                                <td :class="{ choosed: student.powers[1] != 0 }" v-show="student._powers[1] == 0" @click="changePower(index,1)">收党费</td>
+                                <td :class="{ choosed: student.powers[2] != 0 }" v-show="student._powers[2] == 0" @click="changePower(index,2)">评优生</td>
+                                <td :class="{ choosed: student.powers[3] != 0 }" v-show="student._powers[3] == 0" @click="changePower(index,3)">考  勤</td>
+                                <td :class="{ choosed: student.powers[4] != 0 }" v-show="student._powers[4] == 0" @click="changePower(index,4)">管回复</td>
                             </tr>
                         </tbody>
                     </table>
