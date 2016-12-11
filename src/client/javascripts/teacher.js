@@ -114,9 +114,10 @@ let vm = new Vue ({
             this.$refs.teacher.validate((valid) => {
                 if (valid) {
                     this.logined = true
+                    this.$message('登录成功');
                     return true
                 } else {
-                    console.log('error submit!!');
+                    this.$message.error('您的输入有误');
                     return false;
                 }
             });
