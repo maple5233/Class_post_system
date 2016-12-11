@@ -1,7 +1,6 @@
 const mysql = require('mysql');
 const $conf = require('../config');
 const $sql = require('./meetingSql');
-const $wJosn = require('./utils/writeJson');
 
 let pool = mysql.createPool($conf.mysql);
 
@@ -44,7 +43,7 @@ module.exports = {
     find: function(req, res, next){
     	pool.getConnection(function(err, connection){
     		console.log("find");
-    		let param = req.query || req.params;
+    		let param = req.query || req.params ;
     		let startPage = param.page*20;
     		let endPage = (param.page + 1)*20;
             connection.query($sql.findAll, [param.classId, param.type, startPage, endPage], function(err, result){
