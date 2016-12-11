@@ -19,7 +19,7 @@ module.exports = {
 	add: function (req, res, next) {
 		pool.getConnection(function(err, connection) {
 			// 获取前台页面传过来的参数
-			let param = req.query || req.params;
+            let param = req.body || req.query || req.params;
 			// 建立连接，向表中插入值
 			//INSERT INTO party_fee_posts (postId, studentId, time, howmuch, isDeleted) VALUES (null,?,?,?,0)
 			connection.query($sql.insert, [param.studentId, param.time, param.howmuch], function(err, result) {
@@ -42,7 +42,7 @@ module.exports = {
 	},
     find: function(req, res, next){
     	pool.getConnection(function(err, connection){
-    		let param = req.body || req.query || req.params;
+            let param = req.query || req.params;
     		let startPage = param.page*20;
     		let endPage = (param.page + 1)*20;
             connection.query($sql.findAll, [param.classId, param.type, startPage, endPage], function(err, result){
