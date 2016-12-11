@@ -24,6 +24,19 @@ let vm = new Vue ({
             teacherId: 1,
             teacherPass: '123456'
         }],
+        students: [{
+            studentName: '洪继耀',
+            studentPass: '233333',
+            studentId: 0
+        },{
+            studentName: '李镇杞',
+            studentPass: '233333',
+            studentId: 1
+        },{
+            studentName: '徐盛倩',
+            studentPass: '233333',
+            studentId: 2
+        }],
         form: {
           name: '',
           pass: '',
@@ -39,7 +52,7 @@ let vm = new Vue ({
          * 切换编辑模式
          */
         changeMod: function () {
-            this.teacherMod = this.modelSelected === '管理学生账号'
+            this.teacherMod = this.modelSelected !== '管理学生账号'
         },
         /**
          * 登录   
@@ -81,7 +94,8 @@ let vm = new Vue ({
         handleDelete: function(index, row) {
             let name = this.teacherMod ? row.teacherName : row.studentName;
             let arr = this.teacherMod ? this.teachers : this.students;
-            this.$confirm('此操作将永久删除' + name + '，是否继续?', '提示', {
+            console.log(row)
+            this.$confirm('此操作将删除' + name + '，是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -105,6 +119,10 @@ let vm = new Vue ({
             if (this.teacherMod) {
                 this.teachers[this.index].teacherName = this.form.name
                 this.teachers[this.index].teacherPass = this.form.pass
+                this.editing = false
+            } else {
+                this.students[this.index].studentName = this.form.name
+                this.students[this.index].studentPass = this.form.pass
                 this.editing = false
             }
         },
