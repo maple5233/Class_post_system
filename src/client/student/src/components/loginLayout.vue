@@ -104,7 +104,7 @@
   }
 }
 </script>
-<style >
+<style  scoped>
 	#container {
 		max-width: 450px;
 		margin: 4rem auto;

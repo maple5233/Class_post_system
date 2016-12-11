@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <header-menu ></header-menu>
-    <router-view></router-view>
+    <div class="container">
+        <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -28,4 +30,8 @@
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
     margin: 0;
   }
+    .container {
+      margin: 0 auto;
+      padding: 2rem;
+    }
 </style>
