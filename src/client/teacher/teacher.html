@@ -21,7 +21,7 @@
                 </el-col>
                 <el-col :span="6" v-show="logined">
                     <div class="grid-content bg-purple-dark">
-                        <el-radio-group v-model="modelSelected" @change="changeMod">
+                        <el-radio-group v-model="modelSelected" @change="changeMod()">
                             <el-radio-button label="授予学生职位"></el-radio-button>
                             <el-radio-button label="个人权限编辑"></el-radio-button>
                         </el-radio-group>

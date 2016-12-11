@@ -145,6 +145,7 @@ let vm = new Vue ({
         },
         changePower: function (index,power) {
           let student = this.students[index];
+          console.log(student._powers[index])
           let hasAuthor = (student.powers[power] == 1); // 原本有没有这个权限
           student.powers[power] = hasAuthor ? '0':'1';
           if(!hasAuthor) { // 增加权限
@@ -152,8 +153,9 @@ let vm = new Vue ({
           } else {                      // 权限缩水
             student.studentRank -= getPowerTwo(power);
           }
-          this.changeMod();
-          this.changeMod();
+          this.changeMod()
+          console.log(student._powers[index])
+          this.changeMod()
            /**
              * 根据学生id更新后台数据
              */
@@ -162,7 +164,8 @@ let vm = new Vue ({
          * 切换编辑模式
          */
         changeMod: function () {
-          this.roleMod = !this.roleMod
+          console.log()
+          this.roleMod = event.target._value === '授予学生职位'
         }
     }
 })
