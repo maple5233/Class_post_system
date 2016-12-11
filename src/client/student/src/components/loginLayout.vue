@@ -1,7 +1,7 @@
 <template>
     <div>
 	    <el-form :model="userForm" :rules="rules" ref="userForm">
-	    	<el-card class="box-card" id="container">
+	    	<el-card class="box-card" id="content">
 		    	<el-tabs :active-name="activeName">
 			    <el-tab-pane label="登录" name="login">
 			    	<el-row type="flex">
@@ -30,11 +30,9 @@
 			      	 	</el-form-item>
 			      	 	<el-form-item label="" prop="rstudentClass">
 			      	 		<el-select v-model="userForm.rstudentClass" placeholder="请选择班级">
-						    <el-option
-						      v-for="item in classops"
-						      :label="item.label"
-						      :value="item.value">
-						    </el-option>
+						    <el-option label="一班" value="1"></el-option>
+						    <el-option label="二班" value="2"></el-option>
+						    <el-option label="三班" value="3"></el-option>
 						  </el-select>
 			      	 	</el-form-item>
 			       	<el-button type="primary">注 册</el-button>
@@ -94,7 +92,7 @@
 	        		{ min: 8, max: 20, message: '长度在 8 到 20 个字符', trigger: 'blur' }
 	        	],
 	        	rstudentClass: [
-	        		{ required: true, message: '不能留空', trigger: 'blur' },
+	        		{ required: true, message: '不能留空', trigger: 'change' },
 	        	]
 	        }
       };
@@ -104,23 +102,27 @@
   }
 }
 </script>
-<style  scoped>
-	#container {
+<style lang="less"  scoped>
+	@center-margin:  0 auto;
+	#content {
 		max-width: 450px;
 		margin: 4rem auto;
 		padding-bottom:  3.5rem;
 		padding-top: 2rem;
 	}
-	#container .el-tabs {
+	#content .el-tabs {
 		width: 80%;
-		margin:  0 auto;
+		margin: @center-margin;
 		display: block;
 	}
-	#container .el-input  {
-		margin:  0 auto;
+	#content .el-input  {
+		margin:  @center-margin;
 	}
-	#container .el-button {
+	#content .el-button {
 		width: 100%;
     		height: 38px;
+	}
+	.el-form-item {
+	    margin-bottom: 5px;
 	}
 </style>
