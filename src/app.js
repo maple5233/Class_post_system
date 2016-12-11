@@ -8,6 +8,7 @@ require("babel-core/register");
 const config = require('./config');
 const app = express();
 let meeting = require('./routes/meeting');
+let fee = require('./routes/fee');
 let teacher = require('./routes/teacher');
 
 app.use(logger('dev'));
@@ -42,7 +43,7 @@ app.set('jwtTokenSecret', 'maple5233');
 
 
 //  restful路由
-[meeting,teacher].forEach (item => {
+[meeting,fee,teacher].forEach (item => {
     item.$routers.forEach (router => {
         app[ router.method ] ('/api' + router.path, router.router);
     })
