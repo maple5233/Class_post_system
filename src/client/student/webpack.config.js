@@ -4,8 +4,8 @@ var webpack = require('webpack')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, '../dist'),
-    publicPath: '../dist/',
+    path: path.resolve(__dirname, '/dist'),
+    publicPath: '/dist/',
     filename: 'build.js'
   },
   module: {
@@ -38,7 +38,14 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: true,
+    //配置代理，使得允许跨域 
+    proxy: {  
+      '/api': {  
+        target: 'http://localhost:3000/',  
+        secure: false  
+      }  
+    }  
   },
   devtool: '#eval-source-map'
 }
