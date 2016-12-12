@@ -59,7 +59,7 @@ module.exports = {
     },
     register: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            let param = req.query || req.body || req.params;
+            let param = req.body || req.query || req.params;
             let classId = param.classId;
             let studentName = param.studentName;
             let studentPass = param.studentPass;
@@ -101,7 +101,7 @@ module.exports = {
     },
     tryLogin: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            let param = req.query || req.body || req.params;
+            let param =  req.body || req.query;
             let studentId = param.studentId;
             let studentPass = param.studentPass;
             let $querySql = $sql.tryLogin;
@@ -206,7 +206,7 @@ module.exports = {
     },
     updatePass: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            let param = req.query || req.body || req.params;
+            let param =  req.body || req.params;
             let studentId = param.studentId;
             let studentPass = param.studentPass;
             let $querySql = $sql.updatePass;
@@ -214,6 +214,7 @@ module.exports = {
             $querySql = mysql.format ($querySql, $value);
             let _result;
             connection.query ($querySql, function (err, result) {
+                console.log($querySql)
                 if (result) {
                     if (result.affectedRows >= 1) {
                         _result = {
@@ -242,7 +243,7 @@ module.exports = {
     },
     updateRank: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            let param = req.query || req.body || req.params;
+            let param = req.body || req.query || req.params;
             let studentId = param.studentId;
             let studentRank = param.studentRank;
             let $querySql = $sql.updateRank;

@@ -4,7 +4,7 @@ let vm = new Vue ({
     el: '#whole',
     data: {
         logined: true,
-        teacherMod: true,
+        teacherMod: false,
         manager: {
             password: ''
         },
@@ -25,28 +25,8 @@ let vm = new Vue ({
                 { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
             ]
         },
-        teachers: [{
-            teacherName: '尹剑飞',
-            teacherId: 0,
-            teacherPass: '123456'
-        },{
-            teacherName: '王毅',
-            teacherId: 1,
-            teacherPass: '123456'
-        }],
-        students: [{
-            studentName: '洪继耀',
-            studentPass: '233333',
-            studentId: 0
-        },{
-            studentName: '李镇杞',
-            studentPass: '233333',
-            studentId: 1
-        },{
-            studentName: '徐盛倩',
-            studentPass: '233333',
-            studentId: 2
-        }],
+        teachers: [],
+        students: [],
         form: {
           name: '',
           pass: '',
@@ -58,7 +38,40 @@ let vm = new Vue ({
         editing: false,
         adding: false
     },
+    mounted() {
+        this.pullPeople();
+    },
     methods: {
+        /**
+         * 后台拉数据
+         */
+        pullPeople: function () {
+            let result,success;
+            axios.get('/api/students?type=studentId&teacherId=0&page=0').then((response)=>{
+                result = response.data;
+                success = result.code === '0';
+                if (!success) {
+                    this.$message(result.code);
+                    return;
+                }
+                this.students = result.data.students;
+            }).catch((error) => {
+                this.$message.error(error);
+                return;
+            });
+            axios.get('/api/teachers').then(res=>{
+                result = res.data;
+                success = result.code === '0';
+                if (!success) {
+                    this.$message(result.code);
+                    return;
+                }
+                this.teachers = result.data;
+            }).catch((error) => {
+                this.$message.error(error);
+                return;
+            });
+        },
         /**
          * 切换编辑模式
          */
@@ -71,12 +84,12 @@ let vm = new Vue ({
          */
         tryLogin : function () {
             this.$refs.manager.validate((valid) => {
-                if (valid) {
+                if (valid && this.manager.password === 'maple5233') {
                     this.logined = true
                     this.$message('登录成功');
                     return true
                 } else {
-                    this.$message.error('您的输入有误');
+                    this.$message.error('您的输入有误或者密码错误');
                     return false;
                 }
             });
@@ -113,7 +126,7 @@ let vm = new Vue ({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                arr.splice(index,1)
+                arr.splice(index,1);
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -148,20 +161,59 @@ let vm = new Vue ({
             if (!this.adding) {
                 // 编辑某个老师或者学生
                 if (this.teacherMod) {
-                    this.teachers[this.index].teacherName = this.form.name
-                    this.teachers[this.index].teacherPass = this.form.pass
+                    axios.put('/api/teachers/pass',{
+                        teacherId : this.teachers[this.index].teacherId,
+                        teacherPass : this.form.pass
+                    }).then((res)=>{
+                        let result = res.data;
+                        let success = result.code === '0';
+                        if (!success) {
+                            this.$message('error')
+                            return
+                        }
+                        this.$message('修改成功')
+                        this.teachers[this.index].teacherName = this.form.name
+                        this.teachers[this.index].teacherPass = this.form.pass
+                    })
                 } else {
-                    this.students[this.index].studentName = this.form.name
-                    this.students[this.index].studentPass = this.form.pass
+                    let that = this;
+                    axios.put('/api/students/pass',{
+                        studentId : that.students[that.index].studentId,
+                        studentPass : that.form.pass
+                    }).then((res)=>{
+                        let result = res.data;
+                        console.log(result)
+                        let success = result.code === '0';
+                        if (!success) {
+                            this.$message(result.msg)
+                            return
+                        }
+                        this.students[this.index].studentName = this.form.name
+                        this.students[this.index].studentPass = this.form.pass
+                        this.$message('修改成功')
+                    })
                 }
             } else {
                 if (this.teacherMod) {
-                    this.teachers.push({
-                        teacherId: Math.floor(Math.random()*100),
-                        teacherName: this.form.name,
-                        teacherPass: this.form.pass
+                    axios.post('/api/teachers/register',{
+                        teacherName : this.form.name,
+                        teacherPass : this.form.pass
+                    }).then((res)=>{
+                        let result = res.data;
+                        let success = result.code === '0';
+                        if (!success) {
+                            this.$message('error')
+                            return
+                        }
+                        this.$message('增加成功')
+                        this.teachers.push({
+                            teacherId: result.teacherId,
+                            teacherName: this.form.name,
+                            teacherPass: this.form.pass
+                        });
                     });
                 } else {
+                    /* ajax */
                     this.students.push({
                         studentId: Math.floor(Math.random()*100),
                         studentName: this.form.name,

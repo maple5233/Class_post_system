@@ -6,7 +6,7 @@ let teacher = {};
 teacher.$routers = [
     { // 老师注册
         method: 'post',
-        path: '/teachers',
+        path: '/teachers/register',
         router: (req, res, next) => {
             teacherDao.add (req, res, next);
         }

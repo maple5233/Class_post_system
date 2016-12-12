@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-cn" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <title>管理员客户端</title>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="edit-box">
-            <el-card class="box-card">
+            <el-card class="box-card" v-show="logined">
                 <!-- 老师账号列表 -->
                 <div class="role-box" v-show="teacherMod">
                     <!-- 卡片首部 -->
@@ -125,6 +125,7 @@
     </div>
     <script src="http://cdn.bootcss.com/vue/2.0.3/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../javascripts/manager.js"></script>
 </body>
 </html>

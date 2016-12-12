@@ -12,13 +12,15 @@ let pool = mysql.createPool ($conf.mysql);
 module.exports = {
     add: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            var param = req.query || req.body || req.params;
+            var param = req.body || req.query || req.params;
             let _result;
             connection.query ($sql.insert, [ param.teacherName, param.teacherPass ], function (err, result) {
                 if (result) {
+                    console.log(result)
                     _result = {
                         code: '0',
-                        msg: '增加成功'
+                        msg: '增加成功',
+                        teacherId: result.insertId
                     };
                 } else {
                     _result = {
@@ -33,7 +35,7 @@ module.exports = {
     },
     tryLogin: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            let param = req.query || req.body || req.params;
+            let param = req.body || req.query || req.params;
             let teacherId = param.teacherId;
             let teacherPass = param.teacherPass;
             let $querySql = $sql.tryLogin;
@@ -117,7 +119,7 @@ module.exports = {
     },
     updatePass: function (req, res, next) {
         pool.getConnection (function (err, connection) {
-            let param = req.query || req.body || req.params;
+            let param = req.body || req.query || req.params;
             let teacherId = param.teacherId;
             let teacherPass = param.teacherPass;
             let $querySql = $sql.updatePass;
