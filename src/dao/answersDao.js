@@ -9,10 +9,9 @@ let pool = mysql.createPool($conf.mysql);
 module.exports = {
 	add: function (req, res) {
 		pool.getConnection(function(err, connection) {
-			console.log('ddd');
 			// 获取前台页面传过来的参数
-			let param = req.query || req.params;
-			//let param = req.body || req.query || req.params;
+			//let param = req.query || req.params;
+			let param = req.body || req.query || req.params;
 			// 建立连接，向表中插入值
 			//INSERT INTO answers (answerId, studentId, postKind, postId, content, time, isDeleted) VALUES (null,?,?,?,?,?,0)
 			connection.query($sql.insert, [param.studentId, param.postKind, param.postId, param.content, param.time], function(err, result) {
@@ -59,8 +58,8 @@ module.exports = {
     },
     delete: function(req, res){
     	pool.getConnection(function(err, connection){
-    		let param = req.query || req.params;
-    		//let param = req.body || req.query || req.params;
+    		//let param = req.query || req.params;
+    		let param = req.body || req.query || req.params;
             connection.query($sql.delete, [param.answerId], function(err, result){
             	if(result.affectedRows) {
             		console.log("deletePost:"+result.affectedRows);

@@ -42,7 +42,7 @@ app.all('/api/*', [bodyParser(), jwtAuth]);
 
 
 //  restful路由
-[ meeting, fee, goodStudent, checkIn, student, teacher ].forEach (item => {
+[ meeting, fee, goodStudent, checkIn, answers, student, teacher ].forEach (item => {
     item.$routers.forEach (router => {
         app[ router.method ] ('/api' + router.path, router.router);
     })
