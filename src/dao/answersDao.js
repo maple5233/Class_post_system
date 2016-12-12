@@ -1,19 +1,10 @@
 const mysql = require('mysql');
 const $conf = require('../config');
 const $sql = require('./answersSql');
+const jsonWrite = require ('./utils/writeJson');
 
 let pool = mysql.createPool($conf.mysql);
 
-let jsonWrite = function (res, ret) {
-	if(typeof ret === 'undefined') {
-		res.status (500).json ({
-			code:'error',
-			msg: '操作失败'
-		});
-	} else {
-		res.status (200).json (ret);
-	}
-};
 
 module.exports = {
 	add: function (req, res) {
