@@ -8,7 +8,7 @@ login.$routers = [
         method: 'get',
         path: '/students/login',
         router: (req, res, next) => {
-            studentDao.tryLogin(req, res, next);
+            studentDao.tryLogin (req, res, next);
         }
     }
 ];

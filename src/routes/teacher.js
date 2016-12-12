@@ -1,12 +1,12 @@
-const teacherDao = require('../dao/teacherDao');
+const teacherDao = require ('../dao/teacherDao');
 let teacher = {};
 
 teacher.$routers = [
     { // 老师注册
-        method: 'post',
+        method: 'get',
         path: '/teachers',
-        router: (req, res,next) => {
-            teacherDao.add(req, res, next);
+        router: (req, res, next) => {
+            teacherDao.add (req, res, next);
         }
     }
 ];
