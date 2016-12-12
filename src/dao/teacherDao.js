@@ -1,7 +1,7 @@
 // 实现与MySQL交互
 let mysql = require('mysql');
 let $conf = require('../config');
-let $sql = require('./teacher');
+let $sql = require('./teacherSql');
 
 // 使用连接池，提升性能
 let pool  = mysql.createPool($conf.mysql);
