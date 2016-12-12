@@ -15,6 +15,7 @@ let answers = require ('./routes/answers');
 let student = require ('./routes/student');
 let teacher = require ('./routes/teacher');
 let login = require ('./routes/login');
+let count = require('./routes/count');
 
 app.use (logger ('dev'));
 app.use (bodyParser.json ());
@@ -51,7 +52,7 @@ app.all ('/api/*', [ bodyParser (), jwtAuth ]);
 
 
 //  restful路由
-[ meeting, fee, goodStudent, checkIn, answers, student, teacher ].forEach (item => {
+[ meeting, fee, goodStudent, checkIn, answers, student, count, teacher ].forEach (item => {
     item.$routers.forEach (router => {
         app[ router.method ] ('/api' + router.path, router.router);
     })
