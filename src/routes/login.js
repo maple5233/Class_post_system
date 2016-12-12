@@ -13,7 +13,7 @@ login.$routers = [
         }
     },
     {
-        method: 'get',
+        method: 'put',
         path: '/teachers/login',
         router: (req, res, next) => {
             teacherDao.tryLogin (req, res, next);

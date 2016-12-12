@@ -29,19 +29,17 @@ module.exports = {
                 if (result) {
                     if (result == "") {
                         _result = {
-                            code: '1005A',
+                            code: '0',
                             data: {
-                                students: result
-                            },
-                            msg: '老师工号不存在'
+                                students: []
+                            }
                         }
                     } else {
                         _result = {
                             code: '0',
                             data: {
                                 students: result
-                            },
-                            msg: '查找成功'
+                            }
                         }
                     }
                     jsonWrite (res, _result);

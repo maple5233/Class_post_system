@@ -36,7 +36,8 @@ let vm = new Vue ({
         row: null,
         formLabelWidth:'120px',
         editing: false,
-        adding: false
+        adding: false,
+        token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjEsImV4cCI6MTQ4MjE4MDY1OTkxMH0.hvlUGZJEpzr8MerlB7JMSSpLRkNPppDBOMlvqVA1dCY'
     },
     mounted() {
         this.pullPeople();
@@ -47,7 +48,14 @@ let vm = new Vue ({
          */
         pullPeople: function () {
             let result,success;
-            axios.get('/api/students?type=studentId&teacherId=0&page=0').then((response)=>{
+            axios.get('/api/students',{
+                params:{
+                    type:'studentId',
+                    teacherId: 0,
+                    page: 0,
+                    access_token: this.token
+                }
+            }).then((response)=>{
                 result = response.data;
                 success = result.code === '0';
                 if (!success) {
@@ -59,7 +67,11 @@ let vm = new Vue ({
                 this.$message.error(error);
                 return;
             });
-            axios.get('/api/teachers').then(res=>{
+            axios.get('/api/teachers',{
+                params:{
+                    access_token: this.token
+                }
+            }).then(res=>{
                 result = res.data;
                 success = result.code === '0';
                 if (!success) {
@@ -163,7 +175,8 @@ let vm = new Vue ({
                 if (this.teacherMod) {
                     axios.put('/api/teachers/pass',{
                         teacherId : this.teachers[this.index].teacherId,
-                        teacherPass : this.form.pass
+                        teacherPass : this.form.pass,
+                        access_token: this.token
                     }).then((res)=>{
                         let result = res.data;
                         let success = result.code === '0';
@@ -179,7 +192,8 @@ let vm = new Vue ({
                     let that = this;
                     axios.put('/api/students/pass',{
                         studentId : that.students[that.index].studentId,
-                        studentPass : that.form.pass
+                        studentPass : that.form.pass,
+                        access_token: this.token
                     }).then((res)=>{
                         let result = res.data;
                         console.log(result)
@@ -197,7 +211,8 @@ let vm = new Vue ({
                 if (this.teacherMod) {
                     axios.post('/api/teachers/register',{
                         teacherName : this.form.name,
-                        teacherPass : this.form.pass
+                        teacherPass : this.form.pass,
+                        access_token: this.token,
                     }).then((res)=>{
                         let result = res.data;
                         let success = result.code === '0';

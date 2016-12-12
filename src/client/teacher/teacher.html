@@ -49,7 +49,7 @@
             </el-card>
         </div>
         <div class="edit-box">
-            <el-card class="box-card">
+            <el-card class="box-card" v-show="logined">
                 <div class="role-box" v-if="roleMod">
                     <div slot="header" class="clearfix">
                         <span class="small-font">学生角色列表</span>
@@ -101,6 +101,7 @@
     </div>
     <script src="http://cdn.bootcss.com/vue/2.0.3/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../javascripts/teacher.js"></script>
 </body>
 </html>

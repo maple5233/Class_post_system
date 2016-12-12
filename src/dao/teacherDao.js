@@ -16,7 +16,6 @@ module.exports = {
             let _result;
             connection.query ($sql.insert, [ param.teacherName, param.teacherPass ], function (err, result) {
                 if (result) {
-                    console.log(result)
                     _result = {
                         code: '0',
                         msg: '增加成功',
@@ -44,6 +43,7 @@ module.exports = {
             let className;
             let _result;
             connection.query ($querySql, function (err, result) {
+                console.log($querySql)
                 if (result) {
                     if (result.length === 0) {
                         _result = {

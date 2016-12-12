@@ -76,7 +76,8 @@ let vm = new Vue ({
         teacher: {
           teacherId: null,
           teacherPass: null,
-          _teacherPass: null
+          _teacherPass: null,
+          teacherName: ''
         },
         rules: {
           teacherId: [
@@ -87,23 +88,10 @@ let vm = new Vue ({
             { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
           ]
         },
-        logined: true,              // 是否登录
+        logined: false,              // 是否登录
         roleMod: true,              // 编辑角色模式
-        students : [{
-            studentId: 0,           // 学号
-            studentName: '洪继耀',  // 姓名
-            studentRank: 31,        // 权限等级
-            role: 4,                 // 角色等级(通过studentRank计算得到)
-            powers: ['1', '1', '1', '1', '1'], // 实际权限数组（计算得到）
-            rolePowers: ['1','1','1','1','1']    // 职位权限数组（计算得到）
-        },{
-            studentId: 1,           // 学号
-            studentName: '徐胜倩',  // 姓名
-            studentRank: 14,        // 权限等级
-            role: 3,                 // 角色等级(通过studentRank计算得到)
-            powers: ['0', '1', '1', '1', '0'], // 实际权限数组（计算得到）
-            rolePowers: ['0','1','1','1','0']    // 职位权限数组（计算得到）
-        }]
+        students : [],
+        token: null
     },
     methods: {
         /**
@@ -113,9 +101,42 @@ let vm = new Vue ({
         tryLogin : function () {
             this.$refs.teacher.validate((valid) => {
                 if (valid) {
-                    this.logined = true
-                    this.$message('登录成功');
-                    return true
+                    axios.put('/api/teachers/login',{
+                      teacherId: this.teacher.teacherId,
+                      teacherPass: this.teacher.teacherPass
+                    }).then((res)=>{
+                        let result = res.data;
+                        let success = result.code === '0';
+                        if (!success) {
+                          this.$message.error(result.msg);
+                          return;
+                        }
+                        this.teacher.teacherName = result.data.teacherName
+                        this.$message(this.teacher.teacherName + '您好，您已经登录成功');
+                        this.token = result.token;
+                        axios.get('/api/students',{
+                          params: {
+                            teacherId: this.teacher.teacherId,
+                            type: 'studentId',
+                            page: 0,
+                            access_token: this.token
+                          }
+                        }, {
+                          headers: {
+                            Authorization: 'Bearer ' + this.token
+                          }
+                        }).then((res)=>{
+                          let result = res.data;
+                          this.students = result.data.students
+                          for (let i = this.students.length - 1; i >= 0; i--) {
+                            this.students[i].role = rankToRole(this.students[i].studentRank);
+                            this.students[i].rolePowers = rankToPower(this.students[i].studentRank);
+                            this.students[i].powers = roleToPower(this.students[i].role)
+                          }
+                          this.logined = true
+                          return true
+                        })
+                    })
                 } else {
                     this.$message.error('您的输入有误');
                     return false;
@@ -136,13 +157,29 @@ let vm = new Vue ({
          */
         changeStudentRole: function (index,role) {
           let student = this.students[index];
-          student.role = role;
-          student.studentRank = roleToRank(role);
-          student.powers = rankToPower(student.studentRank);
-          student.rolePowers = student.powers
-            /**
-             * 根据学生id更新后台数据
-             */
+
+          axios.put('/api/students/role',{
+            studentId :  student.studentId,// 学生的id
+            studentRank : roleToRank(role),  // 要授予的职位的默认权限值
+            access_token: this.token
+          }, {
+            headers: {
+              Authorization: 'Bearer ' + this.token
+            }
+          }).then((res)=>{
+            let result = res.data;
+            let success = result.code === '0';
+            if (!success) {
+              this.$message.error('error')
+            } else {
+              student.role = role;
+              student.studentRank = roleToRank(role);
+              student.powers = rankToPower(student.studentRank);
+              student.rolePowers = student.powers
+              this.roleMod = false
+              this.roleMod = true
+            }
+          }) 
         },
         changePower: function (index,power) {
 
@@ -156,11 +193,26 @@ let vm = new Vue ({
           } else {                      // 权限缩水
             student.studentRank -= getPowerTwo(power);
           }
-          
-          student.rolePowers = roleToPower(student.role)
-           /**
-             * 根据学生id更新后台数据
-             */
+
+          axios.put('/api/students/role',{
+            studentId :  student.studentId,// 学生的id
+            studentRank : student.studentRank,
+            access_token: this.token
+          },{
+            headers: {
+              Authorization: 'Bearer ' + this.token
+            }
+          }).then((res)=>{
+            let result = res.data;
+            let success = result.code === '0';
+            if (!success) {
+              this.$message.error('error')
+            } else {
+              student.rolePowers = roleToPower(student.role);
+              this.roleMod = true;
+              this.roleMod = false;
+            }
+          })
         },
         /**
          * 切换编辑模式
