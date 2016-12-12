@@ -46,7 +46,7 @@ app.set('jwtTokenSecret', 'maple5233');
 
 
 //  restful路由
-[meeting,fee,goodStudent,checkIn,teacher].forEach (item => {
+[ meeting, fee, goodStudent, checkIn, student, teacher ].forEach (item => {
     item.$routers.forEach (router => {
         app[ router.method ] ('/api' + router.path, router.router);
     })
