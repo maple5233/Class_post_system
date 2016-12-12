@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import store from '../store.js'
+import axios from 'axios'
 
 export default {
     login(auth) {
-            return axios.post('/students/login', {
+            return axios.post('/api/students/login', {
                     studentName: auth.studentId,
                     studentPass: auth.studentPass
                 })
@@ -24,7 +25,7 @@ export default {
                 });
         },
         register(auth) {
-            return axios.post('/students/register', {
+            return axios.post('/api/students/register', {
                     studentName: auth.studentName,
                     studentPass: auth.studentPass,
                     classId: auth.classId

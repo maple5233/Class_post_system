@@ -30,9 +30,7 @@
                                 </el-form-item>
                                 <el-form-item label="" prop="rstudentClass">
                                     <el-select v-model="userForm.rstudentClass" placeholder="请选择班级">
-                                        <el-option label="一班" value="1"></el-option>
-                                        <el-option label="二班" value="2"></el-option>
-                                        <el-option label="三班" value="3"></el-option>
+                                        <el-option v-for="classop in classops" :label="classop.className" :value="classop.classId"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-button type="primary">注 册</el-button>
@@ -45,21 +43,13 @@
     </div>
 </template>
 <script>
+import getClassService from '../service/getClassService.js'
 export default {
     data() {
             return {
                 title: 'login',
                 activeName: 'login',
-                classops: [{
-                    lable: 'class1',
-                    value: '1班'
-                }, {
-                    lable: 'class2',
-                    value: '2班'
-                }, {
-                    lable: 'class3',
-                    value: '3班'
-                }],
+                classops: [],
                 userForm: {
                     studentId: '',
                     studentPass: '',
@@ -112,8 +102,17 @@ export default {
                 }
             };
         },
+        mounted() {
+            var res = getClassService.getClass();
+            this.classops = res.body.classes;
+        },
         methods: {
-
+            iNotify(title, content) {
+                this.$notify({
+                    title: title,
+                    message: content
+                });
+            },
         }
 }
 </script>

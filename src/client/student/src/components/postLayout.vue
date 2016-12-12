@@ -12,11 +12,18 @@
                             <el-popover placement="bottom-start" width="400">
                                 <el-tag type="gray" slot="reference">评论 <i class="el-icon-menu"></i></el-tag>
                                 <div v-loading="postItem.commentloading" element-loading-text="加载中" style="min-height: 120px">
-                                    <el-tabs v-for="commentItem in postItem.commentItems" type="border-card" class="comment-item">
-                                        <el-tab-pane :label="commentItem.author">{{ commentItem.content }}</el-tab-pane>
-                                    </el-tabs>
-                                    <el-pagination small layout="prev, pager, next" :total="50">
-                                    </el-pagination>
+                                    <el-card id="comment-card" v-for="commentItem in postItem.commentItems" class="box-card">
+                                        <div slot="header">
+                                            <span class="comment-author">{{ commentItem.author }}</span>
+                                            <div class="options">
+                                                <el-tag type="gray">删除 <i class="el-icon-delete"></i></el-tag>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="comment-content">{{ commentItem.content }}</span>
+                                            <span class="comment-time">2016-12-12</span>
+                                        </div>
+                                    </el-card>
                                     <el-input type="textarea" :autosize="{ minRows: 2}" placeholder="请输入内容" v-model="textarea" class="comment-area">
                                     </el-input>
                                     <el-button type="primary" size="small">提 交</el-button>
@@ -261,5 +268,24 @@ export default {
 .el-pagination {
     text-align: right;
     margin-top: 0.5rem;
+}
+
+#comment-card {
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    line-height: 28px;
+    font-size: 1.3rem;
+}
+
+.comment-content {
+    display: block;
+    line-height: 2.3rem;
+    font-size: 1.2rem;
+}
+
+.comment-time {
+    color: #475669;
 }
 </style>

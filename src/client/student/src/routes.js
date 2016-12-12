@@ -1,5 +1,4 @@
 import App from './App.vue'
-import notFound from './components/notFound.vue'
 import loginLayout from './components/loginLayout.vue'
 import postLayout from './components/postLayout.vue'
 
