@@ -1,5 +1,6 @@
 <template>
     <div>
+        <post-modal></post-modal>
         <el-row v-for="postItem in postItems" type="flex" id="content" justify="center">
             <el-col :xs="24" :sm="20" :md="16" :lg="14">
                 <el-card class="box-card">
@@ -26,9 +27,7 @@
                     </div>
                     <div>
                         <el-table :data="postItem.contentData" style="width: 100%">
-                            <el-table-column prop="howmuch" label="金额">
-                            </el-table-column>
-                            <el-table-column prop="time" label="截止日期">
+                            <el-table-column v-for="tableData in postItem.tableDatas" :prop="tableData.prop" :label="tableData.label">
                             </el-table-column>
                         </el-table>
                     </div>
@@ -37,86 +36,188 @@
         </el-row>
     </div>
 </template>
-<script scoped>
+<script>
+import postModal from './postModal.vue'
 export default {
     data() {
             return {
-                postItems: [{
-                    post_id: "1",
-                    type: '党费帖',
-                    title: '来自洪铭辉',
-                    contentData: [{
-                        time: '2016-12-12',
-                        howmuch: '￥15'
-                    }],
-                    commentItems: [{
-                        author: 'Littlesqx',
-                        content: '23333333333'
-                    }, {
-                        author: 'Hjy',
-                        content: '6666666666666'
-                    }],
-                    commentloading: false
-                }, {
-                    post_id: "2",
-                    type: '党费帖',
-                    title: '来自洪铭辉',
-                    contentData: [{
-                        time: '2016-12-12',
-                        howmuch: '￥15'
-                    }],
-                    commentItems: [{
-                        author: 'Littlesqx',
-                        content: '23333333333'
-                    }, {
-                        author: 'Hjy',
-                        content: '6666666666666'
-                    }, {
-                        author: 'Hjy',
-                        content: '6666666666666'
-                    }],
-                    commentloading: false
-                }, {
-                    post_id: "3",
-                    type: '党费帖',
-                    title: '来自洪铭辉',
-                    contentData: [{
-                        time: '2016-12-12',
-                        howmuch: '￥15'
-                    }],
-                    commentItems: [{
-                        author: 'Littlesqx',
-                        content: '23333333333'
-                    }, {
-                        author: 'Hjy',
-                        content: '6666666666666'
-                    }],
-                    commentloading: false
-                }, {
-                    post_id: "3",
-                    type: '党费帖',
-                    title: '来自洪铭辉',
-                    contentData: [{
-                        time: '2016-12-12',
-                        howmuch: '￥15'
-                    }],
-                    commentItems: [{
-                        author: 'Littlesqx',
-                        content: '23333333333'
-                    }, {
-                        author: 'Hjy',
-                        content: '6666666666666'
-                    }],
-                    commentloading: false
-                }]
+                postItems: []
             };
         },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.reload();
+            })
+        },
+        components: {
+            postModal
+        },
         methods: {
-
+            reload: function() {
+                this.postItems = [];
+                var url = location.href;
+                var type = url.substring(url.lastIndexOf('/') + 1, url.length);
+                this.loadData(type);
+            },
+            loadData: function(type) {
+                switch (type) {
+                    case 'meeting':
+                        this.postItems = [{
+                            post_id: "1",
+                            type: '班会帖',
+                            title: '来自尹剑飞',
+                            contentData: [{
+                                time: '2016-12-12',
+                                place: '教学楼 A211',
+                                num_people: '40',
+                                num_show: '34',
+                                title: '来学习Node！'
+                            }],
+                            tableDatas: [{
+                                prop: 'time',
+                                label: ' 班会时间'
+                            }, {
+                                prop: 'place',
+                                label: '地点'
+                            }, {
+                                prop: 'num_people',
+                                label: '应到人数'
+                            }, {
+                                prop: 'num_show',
+                                label: '实到人数'
+                            }, {
+                                prop: 'title',
+                                label: '主题'
+                            }],
+                            commentItems: [{
+                                author: 'Littlesqx',
+                                content: '23333333333'
+                            }, {
+                                author: 'Hjy',
+                                content: '6666666666666'
+                            }],
+                            commentloading: false
+                        }];
+                        break;
+                    case 'fee':
+                        this.postItems = [{
+                            post_id: "1",
+                            type: '党费帖',
+                            title: '来自巫永健',
+                            contentData: [{
+                                time: '2016-12-12',
+                                howmuch: '￥15'
+                            }],
+                            tableDatas: [{
+                                prop: 'time',
+                                label: ' 时间'
+                            }, {
+                                prop: 'howmuch',
+                                label: '金额'
+                            }],
+                            commentItems: [{
+                                author: 'Littlesqx',
+                                content: '23333333333'
+                            }, {
+                                author: 'Hjy',
+                                content: '6666666666666'
+                            }],
+                            commentloading: false
+                        }];
+                        break;
+                    case 'goodStudent':
+                        this.postItems = [{
+                            post_id: "1",
+                            type: '评优帖',
+                            title: '来自何鸿杰',
+                            contentData: [{
+                                good_student: '洪狗辉',
+                                title: '三好孩子',
+                                howmuch: '1毛钱'
+                            }],
+                            tableDatas: [{
+                                prop: 'good_student',
+                                label: '获奖人'
+                            }, {
+                                prop: 'title',
+                                label: '头衔'
+                            }, {
+                                prop: 'howmuch',
+                                label: '奖金数额'
+                            }],
+                            commentItems: [{
+                                author: 'Littlesqx',
+                                content: '23333333333'
+                            }, {
+                                author: 'Hjy',
+                                content: '6666666666666'
+                            }],
+                            commentloading: false
+                        }];
+                        break;
+                    case 'checkIn':
+                        this.postItems = [{
+                            post_id: "1",
+                            type: '考勤帖',
+                            title: '来自黄晓壁',
+                            contentData: [{
+                                bad_student: '洪狗辉',
+                                time: '2016-12-12',
+                                course_name: '基于web编程',
+                            }],
+                            tableDatas: [{
+                                prop: 'bad_student',
+                                label: ' 缺勤人'
+                            }, {
+                                prop: 'time',
+                                label: '缺勤日期'
+                            }, {
+                                prop: 'course_name',
+                                label: '缺勤课程'
+                            }],
+                            commentItems: [{
+                                author: 'Littlesqx',
+                                content: '23333333333'
+                            }, {
+                                author: 'Hjy',
+                                content: '6666666666666'
+                            }],
+                            commentloading: false
+                        }, {
+                            post_id: "2",
+                            type: '考勤帖',
+                            title: '来自黄晓壁',
+                            contentData: [{
+                                bad_student: '洪狗辉',
+                                time: '2016-12-12',
+                                course_name: '基于web编程',
+                            }],
+                            tableDatas: [{
+                                prop: 'bad_student',
+                                label: ' 缺勤人'
+                            }, {
+                                prop: 'time',
+                                label: '缺勤日期'
+                            }, {
+                                prop: 'course_name',
+                                label: '缺勤课程'
+                            }],
+                            commentItems: [{
+                                author: 'Littlesqx',
+                                content: '23333333333'
+                            }, {
+                                author: 'Hjy',
+                                content: '6666666666666'
+                            }],
+                            commentloading: false
+                        }, ];
+                        break;
+                }
+            }
         }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @main-margin: 2rem auto;
 #content {
     margin: @main-margin;
