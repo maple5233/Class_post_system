@@ -1,21 +1,19 @@
 <template>
     <div>
-      {{msg}}
+        {{msg}}
     </div>
 </template>
-
 <script>
-  export default {
-    data () {
-      return {
-      	mes: '404'
-      }
-  },
-  methods: {
-      
-  }
+export default {
+    data() {
+            return {
+                mes: '404'
+            }
+        },
+        methods: {
+
+        }
 }
 </script>
-<style >
-
+<style>
 </style>
