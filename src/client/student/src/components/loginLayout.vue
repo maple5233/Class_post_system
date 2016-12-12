@@ -28,7 +28,7 @@
                                 <el-form-item label="" prop="rrstudentPass">
                                     <el-input placeholder="再输入密码" type="password" v-model="userForm.rrstudentPass"></el-input>
                                 </el-form-item>
-                                <el-form-item label="" prop="rstudentClass">
+                                <el-form-item label="" prop="">
                                     <el-select v-model="userForm.rstudentClass" placeholder="请选择班级">
                                         <el-option v-for="classop in classops" :label="classop.className" :value="classop.classId"></el-option>
                                     </el-select>
@@ -56,7 +56,7 @@ export default {
                     rstudentName: '',
                     rstudentPass: '',
                     rrstudentPass: '',
-                    rstudentClass: ''
+                    rstudentClass: []
                 },
                 rules: {
                     studentId: [{
@@ -98,13 +98,26 @@ export default {
                         required: true,
                         message: '不能留空',
                         trigger: 'change'
-                    }, ]
+                    }]
                 }
             };
         },
         mounted() {
-            var res = getClassService.getClass();
-            this.classops = res.body.classes;
+            getClassService.getClass().then((response) =>{
+                console.log(response);
+                console.log(response.data.data.classes);
+                if (response.data.code == '0') {
+                    // do something 
+                    this.classops = response.data.data.classes;
+                } else {
+                    // code     msg
+                    // 9001A   班级不存在
+                    // 9002B   未知错误
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
         },
         methods: {
             iNotify(title, content) {
