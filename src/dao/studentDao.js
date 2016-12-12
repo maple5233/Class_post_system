@@ -4,8 +4,8 @@ const mysql = require ('mysql');
 const $conf = require ('../config');
 const $sql = require ('./studentSql');
 const jsonWrite = require ('./utils/writeJson');
-const jwt = require('jwt-simple');
-const moment = require('moment');
+const jwt = require ('jwt-simple');
+const moment = require ('moment');
 
 let pool = mysql.createPool ($conf.mysql);
 
@@ -109,7 +109,7 @@ module.exports = {
             let $value = [ studentId ];
             let ClassNameSql = $sql.getClassNameByClassId;
             $querySql = mysql.format ($querySql, $value);
-            let className,teacherId;
+            let className, teacherId;
             let _result;
             connection.query ($querySql, function (err, result) {
                 if (result) {
@@ -124,7 +124,7 @@ module.exports = {
                         jsonWrite (res, _result);
                         connection.release ();
                     } else {
-                        result = result[0];
+                        result = result[ 0 ];
                         if (studentPass != result.studentPass) {
                             _result = {
                                 code: '1002B',
@@ -142,19 +142,19 @@ module.exports = {
                                         msg: '未知错误'
                                     };
                                 }
-                                if(__result.length === 0) {
+                                if (__result.length === 0) {
                                     _result = {
                                         code: '1002C',
                                         msg: '没这个班级'
                                     };
                                 }
-                                className = __result[0].className;
-                                teacherId = __result[0].teacherId;
+                                className = __result[ 0 ].className;
+                                teacherId = __result[ 0 ].teacherId;
                                 // 用户登录后根据id生成token
-                                let expires = moment().add(7,'days').valueOf();
-                                let token = jwt.encode({
-                                  iss: result.studentId,
-                                  exp: expires
+                                let expires = moment ().add (7, 'days').valueOf ();
+                                let token = jwt.encode ({
+                                    iss: result.studentId,
+                                    exp: expires
                                 }, 'maple5233');
                                 // 发回客户端
                                 _result = {
@@ -186,23 +186,52 @@ module.exports = {
             });
         });
     },
-    getStudentByToken(id,req){
+    getStudentByToken: function (id, req) {
         pool.getConnection (function (err, connection) {
             let $querySql = $sql.getStudentById;
             let $value = [ id ];
             $querySql = mysql.format ($querySql, $value);
             let student;
-            connection.query ($querySql, function (err, result){
-                if(err){
-                    console.log(err);
+            connection.query ($querySql, function (err, result) {
+                if (err) {
+                    console.log (err);
                     return null;
                 } else {
-                    if (result == ""){
-                        console.log("找不到这个学生");
+                    if (result == "") {
+                        console.log ("找不到这个学生");
                         return null;
                     }
-                    result = result[0];
+                    result = result[ 0 ];
                     req.query.student = result;
+                }
+            });
+        });
+    },
+    updatePass: function (req, res, next) {
+        pool.getConnection (function (err, connection) {
+            let param = req.query || req.body || req.params;
+            let studentId = param.studentId;
+            let studentPass = param.studentPass;
+            let $querySql = $sql.updatePass;
+            let $value = [ studentPass, studentId ];
+            $querySql = mysql.format ($querySql, $value);
+            let _result;
+            connection.query ($querySql, function (err, result) {
+                if (result) {
+                    if(result.affectedRows >= 1 ){
+                        _result = {
+                            code : '0'
+                        }
+                    }
+                    jsonWrite (res, _result);
+                    connection.release ();
+                } else {
+                    _result = {
+                        code: '-1',
+                        msg: '数据库错误'
+                    };
+                    jsonWrite (res, _result);
+                    connection.release ();
                 }
             });
         });

@@ -20,10 +20,18 @@ student.$routers = [
         }
     },
     {
-        method: 'get',
+        method: 'post',
         path: '/students/login',
         router: (req, res, next) => {
-            studentDao.tryLogin(req, res, next);
+            studentDao.tryLogin (req, res, next);
+        }
+    },
+    {
+        method: 'get',
+        path: '/students/pass',
+        router: (req, res, next) => {
+            console.log ('/students/pass');
+            studentDao.updatePass (req, res, next);
         }
     }
 ];
