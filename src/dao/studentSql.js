@@ -5,7 +5,8 @@ let studentSql = {
     tryLogin: 'select * from students where studentId = ?',
     getClassNameByClassId: 'select * from classes where classId = ?',
     getStudentById: 'select * from students where studentId = ?',
-    updatePass: 'update students SET studentPass = ? where studentId = ?'
+    updatePass: 'update students SET studentPass = ? where studentId = ?',
+    updateRole: 'update students SET studentRank = ? where studentId = ?'
     //getListByAdmin: 'select * from students'
 };
 

@@ -235,6 +235,35 @@ module.exports = {
                 }
             });
         });
+    },
+    updateRole: function (req, res, next) {
+        pool.getConnection (function (err, connection) {
+            let param = req.query || req.body || req.params;
+            let studentId = param.studentId;
+            let studentRank = param.studentRank;
+            let $querySql = $sql.updateRole;
+            let $value = [ studentRank, studentId ];
+            $querySql = mysql.format ($querySql, $value);
+            let _result;
+            connection.query ($querySql, function (err, result) {
+                if (result) {
+                    if(result.affectedRows >= 1 ){
+                        _result = {
+                            code : '0'
+                        }
+                    }
+                    jsonWrite (res, _result);
+                    connection.release ();
+                } else {
+                    _result = {
+                        code: '-1',
+                        msg: '数据库错误'
+                    };
+                    jsonWrite (res, _result);
+                    connection.release ();
+                }
+            });
+        });
     }
 };
 
