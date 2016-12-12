@@ -140,8 +140,4 @@ export default {
     width: 100%;
     height: 38px;
 }
-
-.el-form-item {
-    margin-bottom: 5px;
-}
 </style>

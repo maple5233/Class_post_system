@@ -7,7 +7,7 @@
                     <el-menu-item index="1" id="menu-item">班会帖</el-menu-item>
                 </router-link>
                 <router-link to="/fee">
-                    <el-menu-item index="2" id="menu-item">班费帖</el-menu-item>
+                    <el-menu-item index="2" id="menu-item">党费帖</el-menu-item>
                 </router-link>
                 <router-link to="/goodStudent">
                     <el-menu-item index="3" id="menu-item">评优帖</el-menu-item>

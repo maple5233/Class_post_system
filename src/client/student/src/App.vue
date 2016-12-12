@@ -5,14 +5,12 @@
             <transition name="slide-fade">
                 <router-view></router-view>
             </transition>
-            <float-button></float-button>
         </div>
         <footer-layout></footer-layout>
     </div>
 </template>
 <script>
 import headerMenu from './components/headerMenu.vue'
-import floatButton from './components/floatButton.vue'
 import footerLayout from './components/footerLayout.vue'
 
 export default {
@@ -23,7 +21,6 @@ export default {
         },
         components: {
             headerMenu,
-            floatButton,
             footerLayout
         },
         methods: {
@@ -41,5 +38,6 @@ body {
 .container {
     margin: 0 auto;
     padding: 2rem;
+    min-height: 60vh;
 }
 </style>
