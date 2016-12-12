@@ -37,7 +37,14 @@ student.$routers = [
         method: 'put',
         path: '/students/role',
         router: (req, res, next) => {
-            studentDao.updateRole (req, res, next);
+            studentDao.updateRank (req, res, next);
+        }
+    },
+    {
+        method: 'put',
+        path: '/students/right',
+        router: (req, res, next) => {
+            studentDao.updateRank (req, res, next);
         }
     }
 ];
