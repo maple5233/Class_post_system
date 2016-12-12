@@ -150,5 +150,25 @@ module.exports = {
                 }
             });
         });
+    },
+    getAll: function (req, res, next) {
+        pool.getConnection (function (err, connection) {
+            let _result;
+            connection.query ($sql.queryAll, function (err, result) {
+                if (result) {
+                    _result = {
+                        code: '0',
+                        data: result
+                    }
+                } else {
+                    _result = {
+                        code: '-1',
+                        msg: '数据库错误'
+                    }
+                }
+                jsonWrite (res, _result);
+                connection.release ();
+            });
+        });
     }
 };

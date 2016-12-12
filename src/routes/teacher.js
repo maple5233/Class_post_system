@@ -12,11 +12,17 @@ teacher.$routers = [
         }
     },
     {
-        method: 'get',
+        method: 'put',
         path: '/teachers/pass',
         router: (req, res, next)=> {
-            console.log ("use strict");
             teacherDao.updatePass (req, res, next);
+        }
+    },
+    {
+        method: 'get',
+        path: '/teachers',
+        router: (req, res, next)=> {
+            teacherDao.getAll (req, res, next);
         }
     }
 ];

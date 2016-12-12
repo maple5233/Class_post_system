@@ -27,7 +27,6 @@ module.exports = {
             let _result;
             connection.query ($querySql, function (err, result) {
                 if (result) {
-                    console.log ("findStudent:" + result);
                     if (result == "") {
                         _result = {
                             code: '1005A',
