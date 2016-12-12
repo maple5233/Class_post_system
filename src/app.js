@@ -11,7 +11,6 @@ let meeting = require('./routes/meeting');
 let fee = require('./routes/fee');
 let goodStudent = require('./routes/goodStudent');
 let checkIn = require('./routes/checkin');
-let student = require('./routes/student')
 let teacher = require('./routes/teacher');
 
 app.use(logger('dev'));
@@ -46,7 +45,7 @@ app.set('jwtTokenSecret', 'maple5233');
 
 
 //  restful路由
-[ meeting, fee, goodStudent, checkIn, student, teacher ].forEach (item => {
+[meeting,fee,goodStudent,checkIn,teacher].forEach (item => {
     item.$routers.forEach (router => {
         app[ router.method ] ('/api' + router.path, router.router);
     })
