@@ -5,6 +5,22 @@ const jsonWrite = require ('./utils/writeJson');
 
 let pool = mysql.createPool($conf.mysql);
 
+Date.prototype.Format = function (fmt) {  
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
 
 module.exports = {
 	add: function (req, res) {
@@ -12,9 +28,10 @@ module.exports = {
 			// 获取前台页面传过来的参数
 			//let param = req.query || req.params;
 			let param = req.body || req.query || req.params;
+            let time = new Date().Format("yyyy-MM-dd hh:mm:ss");
 			// 建立连接，向表中插入值
 			//INSERT INTO answers (answerId, studentId, postKind, postId, content, time, isDeleted) VALUES (null,?,?,?,?,?,0)
-			connection.query($sql.insert, [param.studentId, param.postKind, param.postId, param.content, param.time], function(err, result) {
+			connection.query($sql.insert, [param.studentId, param.postKind, param.postId, param.content, time], function(err, result) {
 				if(result) {
 					console.log("insertAnswer:"+result);
 					_result = {
@@ -52,7 +69,14 @@ module.exports = {
             		}
             		jsonWrite(res, _result);
             		connection.release();
-            	}
+            	}else{
+                    _result = {
+                            code: '7001B',
+                            msg: '未知错误'
+                    }
+                    jsonWrite(res, _result);
+                    connection.release();
+                }
             });
     	});
     },
@@ -85,6 +109,4 @@ module.exports = {
 };
 
 
-//http://localhost:3000/api/answers?studentId=1&postKind=1&postId=1&content=有趣&time=2016-12-12
-//http://localhost:3000/api/answers?postId=1
-//http://localhost:3000/api/answers?classId=1&page=0&type=postId
+//http://localhost:3000/api/answers?postKind=1&postId =1
