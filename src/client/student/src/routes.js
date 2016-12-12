@@ -45,5 +45,4 @@ export default [{
     meta: {
         requiresAuth: true,
     },
-}
 }]
