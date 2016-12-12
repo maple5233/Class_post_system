@@ -220,9 +220,16 @@ module.exports = {
                         _result = {
                             code: '0'
                         }
+                        jsonWrite (res, _result);
+                        connection.release ();
+                    } else {
+                        _result = {
+                            code: '-1',
+                            msg: '无此学号'
+                        };
+                        jsonWrite (res, _result);
+                        connection.release ();
                     }
-                    jsonWrite (res, _result);
-                    connection.release ();
                 } else {
                     _result = {
                         code: '-1',

@@ -64,25 +64,25 @@ module.exports = {
                             jsonWrite (res, _result);
                             connection.release ();
                         } else {
-                                // 用户登录后根据id生成token
-                                let expires = moment ().add (7, 'days').valueOf ();
-                                let token = jwt.encode ({
-                                    iss: result.teacherId,
-                                    exp: expires
-                                }, 'maple5233');
-                                // 发回客户端
-                                _result = {
-                                    code: '0',
-                                    data: {
-                                        teacherId: result.teacherId,
-                                        teacherName: result.teacherName
-                                    },
-                                    token: token,
-                                    msg: '查找成功'
-                                };
-                                jsonWrite (res, _result);
-                                connection.release ();
-                            }
+                            // 用户登录后根据id生成token
+                            let expires = moment ().add (7, 'days').valueOf ();
+                            let token = jwt.encode ({
+                                iss: result.teacherId,
+                                exp: expires
+                            }, 'maple5233');
+                            // 发回客户端
+                            _result = {
+                                code: '0',
+                                data: {
+                                    teacherId: result.teacherId,
+                                    teacherName: result.teacherName
+                                },
+                                token: token,
+                                msg: '查找成功'
+                            };
+                            jsonWrite (res, _result);
+                            connection.release ();
+                        }
                     }
                 } else {
                     _result = {
@@ -115,4 +115,40 @@ module.exports = {
             });
         });
     },
+    updatePass: function (req, res, next) {
+        pool.getConnection (function (err, connection) {
+            let param = req.query || req.body || req.params;
+            let teacherId = param.teacherId;
+            let teacherPass = param.teacherPass;
+            let $querySql = $sql.updatePass;
+            let $value = [ teacherPass, teacherId ];
+            $querySql = mysql.format ($querySql, $value);
+            let _result;
+            connection.query ($querySql, function (err, result) {
+                if (result) {
+                    if (result.affectedRows >= 1) {
+                        _result = {
+                            code: '0'
+                        }
+                        jsonWrite (res, _result);
+                        connection.release ();
+                    } else {
+                        _result = {
+                            code: '-1',
+                            msg: '无此工号'
+                        };
+                        jsonWrite (res, _result);
+                        connection.release ();
+                    }
+                } else {
+                    _result = {
+                        code: '-1',
+                        msg: '数据库错误'
+                    };
+                    jsonWrite (res, _result);
+                    connection.release ();
+                }
+            });
+        });
+    }
 };

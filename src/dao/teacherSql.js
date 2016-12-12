@@ -5,6 +5,7 @@ var teachers = {
     queryById: 'select * from teachers where teacherId=?',
     queryAll: 'select * from teachers',
     tryLogin: 'select * from teachers where teacherId = ?',
+    updatePass: 'update teachers SET teacherPass = ? where teacherId = ?',
     getClassNameByClassId: 'select * from classes where classId = ?'
 };
 
