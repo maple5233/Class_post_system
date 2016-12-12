@@ -1,21 +1,21 @@
 let jwt = require('jwt-simple');
+const studentDao = require ('../dao/studentDao');
 
-module.exports = function(req, res, next) {
+module.exports = async function(req, res, next) {
 	let token = (req.body && req.body.access_token) || 
-	(req.query && req.query.access_token) || 
+	(req.query && req.query.access_token) ||
 	req.headers['x-access-token'];
-
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjEsImV4cCI6MTQ4MjEzNjM1MjIyNn0.mXt6sLdzNAxhoqxPSCKmpOvb22COMbjZNthdcIg-Gwg";
 	if (token) {
 		try {
-			let decoded = jwt.decode(token, app.get('jwtTokenSecret'));
+			let decoded = jwt.decode(token, "maple5233");
 			// handle token here
 			if (decoded.exp <= Date.now()) {
 				res.end('Access token has expired', 400);
 			}
 			// 访问数据库取出用户信息
-			// User.findOne({ _id: decoded.iss }, function(err, user) {
-			// 	req.user = user;
-			// });
+            await studentDao.getStudentByToken(decoded.iss,req);
+            // 注意：这里的req可能存在回调问题
 		} catch (err) {
 			res.status(401).json({
 				code: '-1',

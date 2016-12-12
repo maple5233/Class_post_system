@@ -13,6 +13,7 @@ let goodStudent = require('./routes/goodStudent');
 let checkIn = require('./routes/checkin');
 let student = require('./routes/student');
 let teacher = require('./routes/teacher');
+let login = require('./routes/login');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -25,24 +26,18 @@ let jwt = require('jwt-simple');
 // 设置密钥
 app.set('jwtTokenSecret', 'maple5233');
 
-// 用户登录后根据id生成token
-// let expires = moment().add('days', 7).valueOf();
-// let token = jwt.encode({
-//   iss: user.id,
-//   exp: expires
-// }, app.get('jwtTokenSecret'));
-// 发回客户端
-// res.json({
-//   token : token,
-//   user: user.toJSON()
-// });
-// 
+// 登录不用经过jwt
+[ login ].forEach (item => {
+    item.$routers.forEach (router => {
+        app[ router.method ] ('/api' + router.path, router.router);
+    })
+});
 
 // jwt验证路由
-// var jwtAuth = require('./routes/jwtAuth');
+let jwtAuth = require('./routes/jwtAuth');
 
 // 拦截restful请求
-// app.all('/api/*', [express.bodyParser(), jwtAuth]);
+// app.all('/api/*', [bodyParser(), jwtAuth]);
 
 
 //  restful路由

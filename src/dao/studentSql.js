@@ -3,7 +3,8 @@ let studentSql = {
     getListByAdmin: 'select * from students  and isDeleted=0 order by ? limit ?,?',
     register: 'INSERT INTO students (studentId, studentName, studentPass, studentRank, classId) VALUES (null,?,?,0,?)',
     tryLogin: 'select * from students where studentId = ?',
-    getClassNameByClassId: 'select * from classes where classId = ?'
+    getClassNameByClassId: 'select * from classes where classId = ?',
+    getStudentById: 'select * from students where studentId = ?'
     //getListByAdmin: 'select * from students'
 };
 

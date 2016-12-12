@@ -1,7 +1,11 @@
+"use strict";
+
 const mysql = require ('mysql');
 const $conf = require ('../config');
 const $sql = require ('./studentSql');
 const jsonWrite = require ('./utils/writeJson');
+const jwt = require('jwt-simple');
+const moment = require('moment');
 
 let pool = mysql.createPool ($conf.mysql);
 
@@ -109,8 +113,7 @@ module.exports = {
             let _result;
             connection.query ($querySql, function (err, result) {
                 if (result) {
-                    result = result[0];
-                    if (result == "") {
+                    if (result.length === 0) {
                         _result = {
                             code: '1002A',
                             data: {
@@ -118,13 +121,16 @@ module.exports = {
                             },
                             msg: '学号不存在'
                         }
+                        jsonWrite (res, _result);
+                        connection.release ();
                     } else {
+                        result = result[0];
                         if (studentPass != result.studentPass) {
                             _result = {
                                 code: '1002B',
                                 data: {},
                                 msg: '密码不对'
-                            }
+                            };
                             jsonWrite (res, _result);
                             connection.release ();
                         } else {
@@ -144,6 +150,13 @@ module.exports = {
                                 }
                                 className = __result[0].className;
                                 teacherId = __result[0].teacherId;
+                                // 用户登录后根据id生成token
+                                let expires = moment().add(7,'days').valueOf();
+                                let token = jwt.encode({
+                                  iss: result.studentId,
+                                  exp: expires
+                                }, 'maple5233');
+                                // 发回客户端
                                 _result = {
                                     code: '0',
                                     data: {
@@ -154,8 +167,9 @@ module.exports = {
                                         className: className,
                                         teacherId: teacherId
                                     },
+                                    token: token,
                                     msg: '查找成功'
-                                }
+                                };
                                 jsonWrite (res, _result);
                                 connection.release ();
                             });
@@ -168,6 +182,27 @@ module.exports = {
                     };
                     jsonWrite (res, _result);
                     connection.release ();
+                }
+            });
+        });
+    },
+    getStudentByToken(id,req){
+        pool.getConnection (function (err, connection) {
+            let $querySql = $sql.getStudentById;
+            let $value = [ id ];
+            $querySql = mysql.format ($querySql, $value);
+            let student;
+            connection.query ($querySql, function (err, result){
+                if(err){
+                    console.log(err);
+                    return null;
+                } else {
+                    if (result == ""){
+                        console.log("找不到这个学生");
+                        return null;
+                    }
+                    result = result[0];
+                    req.query.student = result;
                 }
             });
         });
