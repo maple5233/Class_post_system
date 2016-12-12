@@ -11,6 +11,7 @@ let meeting = require('./routes/meeting');
 let fee = require('./routes/fee');
 let goodStudent = require('./routes/goodStudent');
 let checkIn = require('./routes/checkin');
+let answers = require('./routes/answers')
 let student = require('./routes/student');
 let teacher = require('./routes/teacher');
 let login = require('./routes/login');
