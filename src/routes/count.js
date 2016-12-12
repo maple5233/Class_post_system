@@ -10,14 +10,6 @@ count.$routers =[
    		countDao.find(req, res, next);
    	  }
 
-   },
-   {
-   	  method: 'get',
-   	  path: '/classInfo',
-   	  router: (req, res, next) =>{
-   		countDao.findAllClass(req, res, next);
-   	  }
-
    }
 
 ];
