@@ -1,3 +1,5 @@
+"use strict";
+
 const studentDao = require ('../dao/studentDao');
 let student = {};
 
@@ -6,7 +8,7 @@ student.$routers = [
         method: 'get',
         path: '/students',
         router: (req, res) => {
-            console.log ('students')
+            console.log ('students');
             studentDao.getList (req, res);
         }
     },
@@ -14,10 +16,7 @@ student.$routers = [
         method: 'get',
         path: '/students/register',
         router: (req, res, next) => {
-            console.log ('/students/register');
-            res.json ({
-                a: 1
-            })
+            studentDao.register (req, res, next);
         }
     }
 ];
