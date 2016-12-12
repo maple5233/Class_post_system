@@ -95,6 +95,82 @@ module.exports = {
                 }
             });
         });
+    },
+    tryLogin: function (req, res, next) {
+        pool.getConnection (function (err, connection) {
+            let param = req.query || req.body || req.params;
+            let studentId = param.studentId;
+            let studentPass = param.studentPass;
+            let $querySql = $sql.tryLogin;
+            let $value = [ studentId ];
+            let ClassNameSql = $sql.getClassNameByClassId;
+            $querySql = mysql.format ($querySql, $value);
+            let className,teacherId;
+            let _result;
+            connection.query ($querySql, function (err, result) {
+                if (result) {
+                    result = result[0];
+                    if (result == "") {
+                        _result = {
+                            code: '1002A',
+                            data: {
+                                result: result
+                            },
+                            msg: '学号不存在'
+                        }
+                    } else {
+                        if (studentPass != result.studentPass) {
+                            _result = {
+                                code: '1002B',
+                                data: {},
+                                msg: '密码不对'
+                            }
+                            jsonWrite (res, _result);
+                            connection.release ();
+                        } else {
+                            ClassNameSql = mysql.format (ClassNameSql, result.classId);
+                            connection.query (ClassNameSql, function (err, __result) {
+                                if (err) {
+                                    _result = {
+                                        code: '1002C',
+                                        msg: '未知错误'
+                                    };
+                                }
+                                if(__result.length === 0) {
+                                    _result = {
+                                        code: '1002C',
+                                        msg: '没这个班级'
+                                    };
+                                }
+                                className = __result[0].className;
+                                teacherId = __result[0].teacherId;
+                                _result = {
+                                    code: '0',
+                                    data: {
+                                        studentId: result.studentId,
+                                        studentName: result.studentName,
+                                        studentRank: result.studentRank,
+                                        classId: result.classId,
+                                        className: className,
+                                        teacherId: teacherId
+                                    },
+                                    msg: '查找成功'
+                                }
+                                jsonWrite (res, _result);
+                                connection.release ();
+                            });
+                        }
+                    }
+                } else {
+                    _result = {
+                        code: '1002C',
+                        msg: '未知错误'
+                    };
+                    jsonWrite (res, _result);
+                    connection.release ();
+                }
+            });
+        });
     }
 };
 

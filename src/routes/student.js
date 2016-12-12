@@ -13,10 +13,17 @@ student.$routers = [
         }
     },
     {
-        method: 'get',
+        method: 'post',
         path: '/students/register',
         router: (req, res, next) => {
             studentDao.register (req, res, next);
+        }
+    },
+    {
+        method: 'get',
+        path: '/students/login',
+        router: (req, res, next) => {
+            studentDao.tryLogin(req, res, next);
         }
     }
 ];
