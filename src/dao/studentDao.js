@@ -195,11 +195,9 @@ module.exports = {
             connection.query ($querySql, function (err, result) {
                 if (err) {
                     console.log (err);
-                    return null;
                 } else {
                     if (result == "") {
-                        console.log ("找不到这个学生");
-                        return null;
+                        console.log ("不是学生");
                     }
                     result = result[ 0 ];
                     req.query.student = result;

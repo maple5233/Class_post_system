@@ -94,5 +94,25 @@ module.exports = {
                 }
             });
         });
-    }
+    },
+    getTeacherByToken: function (id, req) {
+        pool.getConnection (function (err, connection) {
+            let $querySql = $sql.queryById;
+            let $value = [ id ];
+            $querySql = mysql.format ($querySql, $value);
+            connection.query ($querySql, function (err, result) {
+                if (err) {
+                    console.log (err);
+                    return null;
+                } else {
+                    if (result == "") {
+                        console.log ("不是老师");
+                        return null;
+                    }
+                    result = result[ 0 ];
+                    req.query.teacher = result;
+                }
+            });
+        });
+    },
 };

@@ -38,7 +38,7 @@ app.set('jwtTokenSecret', 'maple5233');
 let jwtAuth = require('./routes/jwtAuth');
 
 // 拦截restful请求
-// app.all('/api/*', [bodyParser(), jwtAuth]);
+app.all('/api/*', [bodyParser(), jwtAuth]);
 
 
 //  restful路由
