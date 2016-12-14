@@ -12,7 +12,7 @@
                                 <el-form-item label="" prop="studentPass">
                                     <el-input placeholder="请输入密码" type="password" v-model="userForm.studentPass"></el-input>
                                 </el-form-item>
-                                <el-button type="primary">登 录</el-button>
+                                <el-button type="primary" @click="login()">登 录</el-button>
                             </el-col>
                         </el-row>
                     </el-tab-pane>
@@ -20,7 +20,7 @@
                         <el-row type="flex">
                             <el-col :span="24" justify="center">
                                 <el-form-item label="" prop="rstudentName">
-                                    <el-input placeholder="请输入学号" v-model="userForm.rstudentName"></el-input>
+                                    <el-input placeholder="请输入姓名" v-model="userForm.rstudentName"></el-input>
                                 </el-form-item>
                                 <el-form-item label="" prop="rstudentPass">
                                     <el-input placeholder="请输入密码" type="password" v-model="userForm.rstudentPass"></el-input>
@@ -33,7 +33,7 @@
                                         <el-option v-for="classop in classops" :label="classop.className" :value="classop.classId"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-button type="primary">注 册</el-button>
+                                <el-button type="primary" @click="register()">注 册</el-button>
                             </el-col>
                         </el-row>
                     </el-tab-pane>
@@ -43,7 +43,28 @@
     </div>
 </template>
 <script>
-import getClassService from '../service/getClassService.js'
+import getClassService from '../service/getClassService'
+import authService from '../service/authService'
+import store from '../store'
+/**
+ * 权限等级转角色等级
+ * @param  {Number} rank 权限等级
+ * @return {Number}      角色等级
+ */
+let rankToRole = (rank) => {
+    let _rank = [
+        0, // 普通学生
+        2, // 课代表 00010
+        6, // 学习委员 00110
+        14, // 团支书 01110
+        31 // 班长 11111
+    ];
+    for (let i = _rank.length - 1; i >= 0; i--) {
+        if (_rank[i] <= rank) {
+            return i;
+        }
+    }
+}
 export default {
     data() {
             return {
@@ -56,7 +77,7 @@ export default {
                     rstudentName: '',
                     rstudentPass: '',
                     rrstudentPass: '',
-                    rstudentClass: []
+                    rstudentClass: ''
                 },
                 rules: {
                     studentId: [{
@@ -103,21 +124,18 @@ export default {
             };
         },
         mounted() {
-            getClassService.getClass().then((response) =>{
-                console.log(response);
-                console.log(response.data.data.classes);
-                if (response.data.code == '0') {
-                    // do something 
-                    this.classops = response.data.data.classes;
-                } else {
-                    // code     msg
-                    // 9001A   班级不存在
-                    // 9002B   未知错误
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
+            getClassService.getClass().then((response) => {
+                    if (response.data.code == '0') {
+                        this.classops = response.data.data.classes;
+                    } else {
+                        // code     msg
+                        // 9001A   班级不存在
+                        // 9002B   未知错误
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
         },
         methods: {
             iNotify(title, content) {
@@ -126,6 +144,62 @@ export default {
                     message: content
                 });
             },
+            register() {
+                if (this.userForm.rstudentPass != this.userForm.rrstudentPass) {
+                    this.iNotify('错误', '两次密码输入的不一样！请重新输入！');
+                    this.userForm.rstudentPass = '';
+                    this.userForm.rrstudentPass = '';
+                    comment.test();
+                    return;
+                }
+                var user = {
+                    studentName: this.userForm.rstudentName,
+                    studentPass: this.userForm.rstudentPass,
+                    classId: this.userForm.rstudentClass
+                };
+                authService.register(user).then((response) => {
+                        if (response.data.code == '0') {
+                            this.iNotify('注册成功', '请记住你的学号：' + response.data.data.studentId);
+                        } else {
+                            // code     msg
+                            // 9001A   班级不存在
+                            // 9002B   未知错误
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+            },
+            login() {
+                var auth = {
+                    studentId: this.userForm.studentId,
+                    studentPass: this.userForm.studentPass,
+                };
+                authService.login(auth).then((response) => {
+                        if (response.data.code == '0') {
+                            this.iNotify('登录成功', '欢迎回来！');
+                            var studentRole = rankToRole(response.data.data.studentRank);
+                            var realauth = {
+                                token: response.data.token,
+                                classId: response.data.data.classId,
+                                className: response.data.data.className,
+                                studentId: response.data.data.studentId,
+                                studentName: response.data.data.studentName,
+                                studentRole: studentRole,
+                                teacherId: response.data.data.teacherId
+                            };
+                            store.dispatch('saveAuth', realauth);
+                            this.$router.push('/meeting');
+                        } else {
+                            // code     msg
+                            // 9001A   班级不存在
+                            // 9002B   未知错误
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+            }
         }
 }
 </script>

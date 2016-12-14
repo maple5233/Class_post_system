@@ -12,7 +12,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !store.getters.auth.username) {
+    if (to.meta.requiresAuth && !store.getters.auth.token) {
         next({ path: '/login' })
     } else {
         next();

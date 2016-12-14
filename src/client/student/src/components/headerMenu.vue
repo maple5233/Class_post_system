@@ -2,7 +2,7 @@
     <div>
         <el-menu theme="dark" default-active="1" mode="horizontal">
             <div id="logo"><span><i class="el-icon-time"></i> Learn time</span></div>
-            <div id="sel-menu" :show="isAuth">
+            <div id="sel-menu" v-show="$store.getters.auth.token">
                 <router-link to="/meeting">
                     <el-menu-item index="1" id="menu-item">班会帖</el-menu-item>
                 </router-link>
@@ -16,22 +16,28 @@
                     <el-menu-item index="4" id="menu-item">考勤帖</el-menu-item>
                 </router-link>
                 <el-submenu index="5" id="menu-item">
-                    <template slot="title">洪狗辉</template>
-                    <el-menu-item index="5-1">退出系统</el-menu-item>
+                    <template slot="title">{{ $store.getters.auth.studentName }}</template>
+                    <a @click="logout()">
+                        <el-menu-item index="5-1">退出系统</el-menu-item>
+                    </a>
                 </el-submenu>
             </div>
         </el-menu>
     </div>
 </template>
 <script>
+import store from '../store'
 export default {
     data() {
             return {
-                isAuth: true
+
             }
         },
         methods: {
-
+            logout() {
+                store.dispatch('clearAuth');
+                this.$router.push('/login');
+            }
         }
 }
 </script>
